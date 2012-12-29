@@ -1,0 +1,142 @@
+# Maintainer: TDY <tdy@gmx.com>
+#
+#  installMIPAV.bin is NOT linked or bundled here!
+#
+#  installMIPAV.bin is distributed by the NIH: http://mipav.cit.nih.gov/download.php
+#   * accept the license
+#   * give your name and email
+#   * download the Linux Release version
+#
+
+pkgname=mipav
+pkgver=6.0.1
+pkgrel=1
+pkgdesc="The Medical Imaging Processing, Imaging, and Visualization application from the CIT/NIH"
+arch=('i686' 'x86_64')
+url="http://mipav.cit.nih.gov/"
+license=('custom')
+depends=('alsa-lib' 'java-environment' 'libcl' 'libgl' 'libxt' 'libxtst' 'unixodbc')
+options=('!emptydirs')
+source=(installMIPAV.bin $pkgname.lax lax.jarfiles
+        http://mipav.cit.nih.gov/license/CopyrightInfo.txt)
+md5sums=('6fdf3e0a7020b9776628b4d07e203cc2'
+         'c005a145fc7a5d411b5a1d4d212557e1'
+         '241a9a0b4570a2350b80a1b5d74e3b2e'
+         '1aaf2ef363e61990c6ef21ab0bc20906')
+[[ $CARCH == i686 ]] && md5sums[0]='578eac8fd75760c3c8ebd1936e8439e1'
+
+eval $(sed -n '3,21p' installMIPAV.bin)
+RESOURCE_PATH="$srcdir/$RESOURCE_DIR/resource"
+JRE_PADDED="$RESOURCE_PATH/jre_padded"
+JRE_TARZ="$RESOURCE_PATH/vm.tar.Z"
+JRE_TAR="$RESOURCE_PATH/vm.tar"
+INSTALLER_DATA_DIR="$srcdir/InstallerData"
+INSTALL_ZIP="$INSTALLER_DATA_DIR/installer.zip"
+INSTALL_PADDED_ZIP="$INSTALLER_DATA_DIR/installer.padded"
+DISK1_DIR="$INSTALLER_DATA_DIR/Disk1"
+INSTDATA_DIR="$DISK1_DIR/InstData"
+RESOURCE_ZIP="$INSTDATA_DIR/Resource1.zip"
+
+build() {
+  cd "$srcdir"
+
+  # compute the number of jre blocks to extract
+  JRE_BLOCKS=$(expr $JREREALSIZE / $BLOCKSIZE)
+  JRE_REMAINDER=$(expr $JREREALSIZE % $BLOCKSIZE)
+  [[ ${JRE_REMAINDER:-0} > 0 ]] && JRE_BLOCKS=$(expr $JRE_BLOCKS + 1)
+
+  # extract the jre archive
+  install -dm755 "$RESOURCE_PATH"
+  dd if=installMIPAV.bin of="$JRE_PADDED" \
+    bs=$BLOCKSIZE skip=$JRESTART count=$JRE_BLOCKS
+  dd if="$JRE_PADDED" of="$JRE_TARZ" bs=$JREREALSIZE count=1
+  gzip -d "$JRE_TARZ"
+
+  # compute the number of installer blocks to extract
+  INSTALLER_BLOCKS=$(expr $ARCHREALSIZE / $BLOCKSIZE)
+  INSTALLER_REMAINDER=$(expr $ARCHREALSIZE % $BLOCKSIZE)
+  [[ ${INSTALLER_REMAINDER:-0} > 0 ]] && INSTALLER_BLOCKS=$(expr $INSTALLER_BLOCKS + 1)
+
+  # extract install.zip
+  cd "$srcdir"
+  install -dm755 "$INSTALLER_DATA_DIR"
+  dd if=installMIPAV.bin of="$INSTALL_PADDED_ZIP" \
+    bs=$BLOCKSIZE skip=$(expr $JRESTART + $JRE_BLOCKS) count=$INSTALLER_BLOCKS
+  dd if="$INSTALL_PADDED_ZIP" of="$INSTALL_ZIP" \
+    bs=$ARCHREALSIZE count=1
+
+  # extract resource1.zip
+  install -dm755 "$INSTDATA_DIR"
+  dd if=installMIPAV.bin of="$RESOURCE_ZIP" \
+    skip=$(expr $JRESTART + $JRE_BLOCKS + $INSTALLER_BLOCKS) \
+    bs=$BLOCKSIZE count=$RESSIZE
+
+  # extract the launcher
+  sed -n '842,3330p' installMIPAV.bin > $pkgname.sh
+}
+
+check() {
+  # verify the extractions
+  INSTALL_ZIP_SIZE=$(cksum "$INSTALL_ZIP" | awk '{ print $2 }')
+  RESOURCE_ZIP_SIZE=$(cksum "$RESOURCE_ZIP" | awk '{ print $2 }')
+  if [[ ${ARCHREALSIZE:=0} != ${INSTALL_ZIP_SIZE:=1} || \
+        ${RESREALSIZE:=0} != ${RESOURCE_ZIP_SIZE:=1} ]]; then
+    echo "The extracted files are corrupted. Please download the installer again"
+    echo "and make sure to download using 'binary' mode. Please do not attempt"
+    echo "to install this currently downloaded copy."
+    return 1
+  fi
+}
+
+package() {
+  cd "$srcdir"
+  install -Dm0755 $pkgname.sh "$pkgdir/usr/share/java/$pkgname/$pkgname"
+  install -Dm0644 $pkgname.lax "$pkgdir/usr/share/java/$pkgname/$pkgname.lax"
+
+  # jre
+  install -dm755 "$pkgdir/usr/lib/$pkgname/"
+  bsdtar -xf "$JRE_TAR" -C "$pkgdir/usr/lib/$pkgname/"
+  find "$pkgdir/usr/lib/$pkgname/" -type d -exec chmod 0755 '{}' \;
+  find "$pkgdir/usr/lib/$pkgname/" -type f -exec chmod 0644 '{}' \;
+  chown -R root:root "$pkgdir/usr/lib/$pkgname/"
+
+  # resources
+  cd "$INSTDATA_DIR"
+  bsdtar -xf "$RESOURCE_ZIP" --strip-components 1
+  bsdtar -xf projects/$pkgname/classes_14584678b1b4_zg_ia_sf.jar \
+    -C "$pkgdir/usr/share/java/$pkgname/"
+  find "$pkgdir/usr/share/java/$pkgname/" -type d -exec chmod 0755 '{}' \;
+  find "$pkgdir/usr/share/java/$pkgname/" -type f -exec chmod 0644 '{}' \;
+  chown -R root:root "$pkgdir/usr/share/java/$pkgname/"
+
+  # libs
+  install -dm0755 "$pkgdir/usr/share/java/$pkgname/lib/jaxp"
+  install -m0644 projects/$pkgname/{classes,src}/lib/*.jar \
+    "$pkgdir/usr/share/java/$pkgname/lib/"
+  install -m0644 projects/$pkgname/classes/lib/jaxp/* \
+    "$pkgdir/usr/share/java/$pkgname/lib/jaxp/"
+  install -m0644 projects/$pkgname/classes/MipavMain.class \
+    "$pkgdir/usr/share/java/$pkgname/"
+  install -Dm0644 projects/$pkgname/src/InsightToolkit/lib/InsightToolkit/InsightToolkit.jar \
+    "$pkgdir/usr/share/java/$pkgname/InsightToolkit/libs/InsightToolkit.jar"
+
+  # lax.jar
+  cd "$INSTALLER_DATA_DIR"
+  bsdtar -xf installer.zip
+  jar -cf lax.jar $(cat "$srcdir/lax.jarfiles")
+  install -m0644 lax.jar "$pkgdir/usr/share/java/$pkgname/lax.jar"
+
+  # licenses
+  install -Dm0644 licenses/ICU-License.htm \
+    "$pkgdir/usr/share/licenses/$pkgname/license.htm"
+  install -Dm0644 "$srcdir/CopyrightInfo.txt" \
+    "$pkgdir/usr/share/licenses/$pkgname/license.txt"
+
+  # bins
+  install -dm0755 "$pkgdir/usr/bin"
+  ln -sf /usr/share/java/$pkgname/$pkgname "$pkgdir/usr/bin/$pkgname"
+  chmod 0755 "$pkgdir/usr/share/java/$pkgname/$pkgname"
+  find "$pkgdir/usr/lib/$pkgname/jre/bin" -type f -exec chmod 0755 '{}' \;
+}
+
+# vim:set ts=2 sw=2 et:
