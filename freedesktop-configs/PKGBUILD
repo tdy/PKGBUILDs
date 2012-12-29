@@ -33,3 +33,5 @@ package() {
   install -Dm644 us.map "$pkgdir/usr/share/kbd/keymaps/i386/qwerty/us-tdy.map"
   gzip "$pkgdir/usr/share/kbd/keymaps/i386/qwerty/us-tdy.map"
 }
+
+# vim:set ts=2 sw=2 et:
