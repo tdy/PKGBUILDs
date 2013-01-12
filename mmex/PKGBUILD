@@ -1,0 +1,33 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=mmex
+pkgver=0.9.9.0
+pkgrel=1
+pkgdesc="An easy-to-use personal finance suite (Money Manager Ex)"
+arch=('i686' 'x86_64')
+url="http://www.codelathe.com/mmex/"
+license=('GPL')
+depends=('wxgtk>=2.8.10')
+makedepends=('boost' 'gettext')
+optdepends=('cups: for printing support')
+source=(http://www.codelathe.com/$pkgname/installer/linux/${pkgname}_${pkgver}_src.tar.bz2)
+md5sums=('f6d284fb58c77aed4f3c425778d31680')
+
+build() {
+  cd "$srcdir/${pkgname}_$pkgver"
+  ./configure LIBS="-lpthread -lm -ldl" \
+    --prefix=/usr \
+	  --enable-unicode \
+	  --enable-shared \
+	  --with-wxshared \
+	  --with-gtk \
+	  --with-wx-config=/usr/lib/wx/config/gtk2-unicode-release-2.8
+  make
+}
+
+package() {
+  cd "$srcdir/${pkgname}_$pkgver"
+  make DESTDIR="$pkgdir/" install
+}
+
+# vim:set ts=2 sw=2 et:
