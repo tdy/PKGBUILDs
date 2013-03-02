@@ -1,0 +1,22 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=cpdu
+pkgver=0.3.82b
+pkgrel=1
+pkgdesc="A cryptographic package distribution utility for archiving encrypted files"
+arch=('i686' 'x86_64')
+url="http://freshmeat.net/projects/cpdu/"
+license=('GPL')
+source=(http://kde-apps.org/CONTENT/content-files/92074-$pkgname-$pkgver.tar.gz)
+sha256sums=('14d4b541112904db7c2599c87317d00af5662a885aaaafd6562555e3c820020a')
+
+build() {
+  cd "$srcdir/$pkgname"
+  make prefix=/usr
+}
+
+package() {
+  install -Dm755 "$srcdir/$pkgname/$pkgname" "$pkgdir/usr/bin/$pkgname"
+}
+
+# vim:set ts=2 sw=2 et:

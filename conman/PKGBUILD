@@ -1,0 +1,33 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=conman
+pkgver=0.2.7
+pkgrel=1
+pkgdesc="A serial console management program designed to support a large number of console devices and simultaneous users"
+arch=('i686' 'x86_64')
+url="https://code.google.com/p/conman/"
+license=('GPL3')
+depends=('perl')
+install=$pkgname.install
+source=(https://$pkgname.googlecode.com/files/$pkgname-$pkgver.tar.bz2
+        $pkgname.rc
+        $pkgname.service)
+sha256sums=('fcf31f06bbb13245f2cf3595d867f26440b73793cfe837831aec37d7276c0c9e'
+            'e261d51d6e800865fa39b9c8a3cbc7aa965a1c351fc8f38e43e8c31790ee1f35'
+            'accd8a2700e8d06951291506d3116bc6ce0f583ae56f7e1361afd36afea9717c')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  sed -i 's/init\.d/rc.d/; s/600/644/' Makefile.in
+  ./configure --prefix=/usr --sysconfdir=/etc
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir/" install
+  install -Dm755 ../$pkgname.rc "$pkgdir/etc/rc.d/$pkgname"
+  install -Dm644 ../$pkgname.service "$pkgdir/usr/lib/systemd/system/$pkgname.service"
+}
+
+# vim:set ts=2 sw=2 et:

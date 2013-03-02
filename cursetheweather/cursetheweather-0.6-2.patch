@@ -1,0 +1,128 @@
+diff -aur old/ctw new/ctw
+--- old/ctw	2010-11-11 23:44:49.000000000 -0800
++++ new/ctw	2010-11-11 23:28:36.000000000 -0800
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python
+ # $HeadURL: http://opensource.hld.ca/svn/trunk/ctw/ctw $
+ # $Id: ctw 316 2009-07-14 12:21:59Z dan $
+ # vim: ft=python ts=2 sw=2 et:
+@@ -7,7 +7,7 @@
+ # Licensed under the GNU GPL version 2.0
+ # See GPL.gz in source distribution for more information
+ 
+-import sys,time,string,urllib2
++import sys,time,string,urllib.request,urllib.error,urllib.parse
+ from threading import Timer
+ 
+ import curses
+@@ -248,7 +248,7 @@
+   while 1:
+     try:
+       weather = weatherfeed.Weather(location, metric)
+-    except urllib2.URLError:
++    except urllib.error.URLError:
+       time.sleep(60)
+       continue
+     break
+@@ -292,11 +292,11 @@
+       update(stdscr)
+ 
+ def printVersion():
+-  print "ctw version %s"%(version)
+-  print "weatherfeed.py backend version: %2.2f"%(weatherfeed.version)
++  print("ctw version %s"%(version))
++  print("weatherfeed.py backend version: %2.2f"%(weatherfeed.version))
+ 
+ def usage():
+-  print """
++  print("""
+   Welcome to "Curse the Weather" Version %s
+   This program will display the weather for a city on the console.
+   Copyright (c)2004 Dan Cardamore <dan@hld.ca>
+@@ -317,13 +317,13 @@
+     4. Your location code is the part after "local/" and before "?from"
+        in this example it is CAXX0343
+ 
+-  """ %(version)
++  """ %(version))
+ 
+ if __name__ == "__main__":
+   if weatherfeed.version < 0.2:
+-    print "This version of ctw requires weatherfeed.py version 0.2 and above"
+-    print "See: http://opensource.hld.ca/trac.cgi/wiki/CurseTheWeather"
+-    print "to get the latest version."
++    print("This version of ctw requires weatherfeed.py version 0.2 and above")
++    print("See: http://opensource.hld.ca/trac.cgi/wiki/CurseTheWeather")
++    print("to get the latest version.")
+     sys.exit(1)
+ 
+   import getopt
+@@ -358,7 +358,7 @@
+       metric = False
+ 
+   if len(args) != 1:
+-    print "invalid location, or too many arguments"
++    print("invalid location, or too many arguments")
+     usage()
+     sys.exit(2)
+ 
+@@ -366,12 +366,12 @@
+     location = arg
+ 
+   if location == "":
+-    print "Invalid location!"
++    print("Invalid location!")
+     usage()
+     sys.exit(2)
+ 
+   if refresh < 10:
+-    print "Invalid refresh rate.  Must be at least 10 minute"
++    print("Invalid refresh rate.  Must be at least 10 minute")
+     usage()
+     sys.exit(2)
+ 
+diff -aur old/weatherfeed.py new/weatherfeed.py
+--- old/weatherfeed.py	2010-11-11 23:44:49.000000000 -0800
++++ new/weatherfeed.py	2010-11-11 23:23:28.000000000 -0800
+@@ -10,7 +10,7 @@
+ # Reads the weather from weather.com and stores it in dictionaries
+ 
+ from xml.dom.minidom import parse, parseString
+-import urllib2
++import urllib.request, urllib.error, urllib.parse
+ import pprint
+ 
+ version = 0.2
+@@ -48,7 +48,7 @@
+   
+   def _getData(self):
+     """Connect to weather.com and get the weather as raw XML"""
+-    urlHandle = urllib2.urlopen("http://xoap.weather.com/weather/local/%s?cc=1&dayf=5&prod=xoap&link=xoap&unit=%s&par=1003666583&key=4128909340a9b2fc" %(self.location, self.units))
++    urlHandle = urllib.request.urlopen("http://xoap.weather.com/weather/local/%s?cc=1&dayf=5&prod=xoap&link=xoap&unit=%s&par=1003666583&key=4128909340a9b2fc" %(self.location, self.units))
+     return urlHandle.read()
+ 
+   def _getWeather(self):
+@@ -258,18 +258,18 @@
+     
+ 
+   def toString(self):
+-    print "Current Conditions: "
++    print("Current Conditions: ")
+     pp = pprint.PrettyPrinter(indent=4)
+     pp.pprint(self.currentConditions)
+ 
+-    print "Forecasts:"
++    print("Forecasts:")
+     day = 0
+     for index in self.forecast:
+-      print "Day %d" %(day)
++      print("Day %d" %(day))
+       pp.pprint(index)
+       day += 1
+   
+ 
+ if __name__ == "__main__":
+   w = Weather("CAXX0343")
+-  print w.toString()
++  print(w.toString())

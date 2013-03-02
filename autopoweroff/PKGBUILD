@@ -1,0 +1,31 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=autopoweroff
+pkgver=2.9.1
+pkgrel=1
+pkgdesc="A daemon to shutdown the computer at specifc times under specific conditions"
+arch=('i686' 'x86_64')
+url="http://autopoweroff.sourceforge.net/"
+license=('GPL')
+depends=('python2')
+optdepends=('pygtk: GUI configurator')
+source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz
+        $pkgname.service)
+md5sums=('50cded1b5bf93cebb4ea0559087d1412'
+         'bfe2d5280d20487f88ede9978e2dde8a')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  sed -i '2739s|=.*|=/var/run|; 2740s|=.*|=/var/log|; 2744s|/init|/rc|' configure
+  sed -i '/postinstall$/d' Makefile.in
+  ./configure --prefix=/usr --sysconfdir=/etc
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir/" install
+  ln -sf ../pixmaps/$pkgname.png "$pkgdir/usr/share/glade/$pkgname.png"
+  install -Dm644 ../$pkgname.service "$pkgdir/usr/lib/systemd/system/$pkgname.service"
+}
+
+# vim:set ts=2 sw=2 et:

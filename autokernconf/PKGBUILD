@@ -1,0 +1,30 @@
+# Maintainer:  TDY <tdy@archlinux.info>
+# Contributor: Paulo Freire <paulofreire gmail com>
+
+pkgname=autokernconf
+pkgver=2011.07.18
+pkgrel=1
+pkgdesc="AUTOmagical KERNel CONFiguration via the Linux Kernel Driver Database (LKDDb)"
+arch=('any')
+url="http://cateee.net/autokernconf/"
+license=('GPL')
+depends=('coreutils' 'grep' 'sed' 'which')
+optdepends=('pciutils: for pci.ids data'
+            'util-linux-ng: for dmesg support')
+install=$pkgname.install
+source=(http://cateee.net/sources/$pkgname/$pkgname-${pkgver//./-}.tar.gz
+        http://cateee.net/sources/lkddb/lkddb-${pkgver//./-}.tar.gz)
+md5sums=('be4ef0b90075b143ce24d0d60176e121'
+         '14cd9f7676b9d0f01e6684b92da00060')
+
+package() {
+  cd "$srcdir/$pkgname-${pkgver//./-}"
+  sed -i 's,s\(bin/lsmod\),\1,' kdetect.sh
+  sed -i "s,lkddb\.list,/usr/share/$pkgname/&," $pkgname.sh
+  install -Dm755 kdetect.sh "$pkgdir/usr/bin/kdetect"
+  install -Dm755 $pkgname.sh "$pkgdir/usr/bin/$pkgname"
+  install -Dm755 ../lkddb-${pkgver//./-}/lkddb.list \
+    "$pkgdir/usr/share/$pkgname/lkddb.list"
+}
+
+# vim:set ts=2 sw=2 et:
