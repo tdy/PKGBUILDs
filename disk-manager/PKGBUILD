@@ -1,0 +1,36 @@
+# Maintainer:  TDY <tdy@archlinux.info>
+# Contributor: fancris3 <fancris3 at aol.com>
+
+pkgname=disk-manager
+pkgver=1.0.1
+pkgrel=3
+pkgdesc="A tool to manage filesystems, partitions, and NTFS write mode"
+arch=('any')
+url="http://flomertens.free.fr/disk-manager/"
+license=('GPL')
+depends=('hicolor-icon-theme' 'pygtk>=2.6' 'udev>=60')
+makedepends=('gettext' 'intltool')
+optdepends=('device-mapper: crypt/lvm/raid support'
+            'ntfs-3g:       NTFS read/write support'
+            'hal>0.5.9:     NTFS read/write support with external devices'
+            'e2fsprogs:     blkid support'
+            'python-notify: notification of new devices at startup' )
+install=$pkgname.install
+source=(http://flomertens.free.fr/$pkgname/download/source/$pkgname-$pkgver.tar.gz
+        $pkgname-$pkgver-$pkgrel.diff)
+sha256sums=('ae5ce69db7887011a296d29530a2bb85d70d4ffab37f26b0051dc7cfce6db0eb'
+            '88963aef363a89c2cffd6eb4c143f1af542df4ef4281fd135adcc5ffc2e6dc63')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  patch -Np1 -i ../$pkgname-$pkgver-$pkgrel.diff
+  ./configure --prefix=/usr --sysconfdir=/etc
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir" install
+}
+
+# vim:set ts=2 sw=2 et:

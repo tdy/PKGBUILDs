@@ -1,0 +1,30 @@
+# Maintainer:  TDY <tdy@archlinux.info>
+# Contributor: Dmitry N. Shilov <stormblast@land.ru>
+
+pkgname=disksearch
+pkgver=1.2.1
+pkgrel=4
+pkgdesc="A database tool for searching removable media (useful for MP3s, docs, etc)"
+arch=('i686' 'x86_64')
+url="http://disksearch.sourceforge.net/"
+license=('GPL')
+depends=('pygtk>=2.8')
+source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz
+        $pkgname.desktop)
+sha256sums=('58711b617382582ad59d9d3ccf95d9a6eb9b620237455b4e586a6efa387258d7'
+            '123bccf0dd6e3af410c2e25c9082e065f645631b30fd224a55609c3ca73f01cd')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  find -name '*.py' -exec sed -i '1s/python/&2/' '{}' \;
+  make prefix="$pkgdir/usr" install
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  install -Dm644 resource/$pkgname.png "$pkgdir/usr/share/pixmaps/$pkgname.png"
+  install -Dm644 ../$pkgname.desktop "$pkgdir/usr/share/applications/$pkgname.desktop"
+  sed -i 's,/local,,' "$pkgdir/usr/bin/$pkgname"
+}
+
+# vim:set ts=2 sw=2 et:
