@@ -1,0 +1,28 @@
+# Maintainer:  TDY <tdy@archlinux.info>
+# Contributor: muflax <muflax@gmail.com>
+
+pkgname=eb-library
+pkgver=4.4.3
+pkgrel=1
+pkgdesc="EB library for several dictionary formats, including EPWING"
+arch=('any')
+url="http://www.sra.co.jp/people/m-kasahr/eb/"
+license=('BSD')
+depends=('perl')
+options=('!libtool')
+source=(ftp://ftp.sra.co.jp/pub/misc/eb/eb-$pkgver.tar.bz2)
+sha256sums=('abe710a77c6fc3588232977bb2f30a2e69ddfbe9fa8d0b05b0d67d95e36f4b5f')
+
+build() {
+  cd "$srcdir/eb-$pkgver"
+  ./configure --prefix=/usr --sysconfdir=/etc
+  make
+}
+
+package() {
+  cd "$srcdir/eb-$pkgver"
+  make DESTDIR="$pkgdir" install
+  install -Dm644 COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+}
+
+# vim:set ts=2 sw=2 et:

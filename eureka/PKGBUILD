@@ -1,0 +1,30 @@
+# Maintainer:  TDY <tdy@archlinux.info>
+# Contributor: adriano <adriano.src@gmail.com>
+
+pkgname=eureka
+pkgver=0.5
+pkgrel=6
+pkgdesc="A lightweight web browser based on KDE"
+arch=('i686' 'x86_64')
+url="http://code.google.com/p/eurekabrowser/"
+license=('GPL')
+depends=('kdebase-runtime')
+makedepends=('automoc4' 'cmake')
+source=(http://eurekabrowser.googlecode.com/files/eureka-$pkgver.tar.gz)
+sha256sums=('6fc22ff36aee276b59bafed177e898ce3a26c8e7254da094dabf9e2525a25389')
+
+build() {
+  cd "$srcdir/eureka-$pkgver"
+  cmake . \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release
+  make
+}
+
+package() {
+  cd "$srcdir/eureka-$pkgver"
+  make DESTDIR="$pkgdir" install
+  install -Dm644 src/eurekaui.rc "$pkgdir/opt/kde/share/apps/eureka/eurekaui.rc"
+}
+
+# vim:set ts=2 sw=2 et:
