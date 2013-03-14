@@ -1,0 +1,29 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=fsvs
+pkgver=1.2.5
+pkgrel=1
+pkgdesc="A fast system versioning tool via subversion backend"
+arch=('i686' 'x86_64')
+url="http://fsvs.tigris.org/"
+license=('GPL3')
+depends=('pcre' 'subversion')
+options=('!buildflags')
+source=(http://download.$pkgname-software.org/$pkgname-$pkgver.tar.bz2)
+sha256sums=('3c957d29e0e568d46ce2fd659a88ed6ea93a05267bdc11dc93131a88b7cb44d2')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  LDFLAGS="/usr/lib/libdl.so.2 -Wl,-z,noexecstack" ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  install -Dm755 src/$pkgname "$pkgdir/usr/bin/$pkgname"
+  install -Dm644 doc/$pkgname.1 "$pkgdir/usr/share/man/man1/$pkgname.1"
+  install -Dm644 doc/$pkgname-groups.5 "$pkgdir/usr/share/man/man5/$pkgname-groups.5"
+  install -cm644 doc/$pkgname-{h,o,u}*.5 "$pkgdir/usr/share/man/man5/"
+}
+
+# vim:set ts=2 sw=2 et:

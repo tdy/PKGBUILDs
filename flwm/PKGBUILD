@@ -1,0 +1,27 @@
+# Maintainer:  TDY <tdy@archlinux.info>
+# Contributor: Imanol Celaya <ilcra1989@gmail.com>
+
+pkgname=flwm
+pkgver=1.02
+pkgrel=2
+pkgdesc="Fast Light Window Manager"
+arch=('i686' 'x86_64')
+url="http://flwm.sourceforge.net/"
+license=('GPL')
+depends=('fltk')
+source=(http://$pkgname.sourceforge.net/$pkgname-$pkgver.tgz)
+sha256sums=('0570681d68f7ab8873e3a85ec48caea5e456971b222e56d5d615ab46e3cb0478')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  install -Dm755 $pkgname "$pkgdir/usr/bin/$pkgname"
+  install -Dm644 $pkgname.1 "$pkgdir/usr/share/man/man1/$pkgname.1"
+}
+
+# vim:set ts=2 sw=2 et:

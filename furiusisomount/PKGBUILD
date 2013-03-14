@@ -1,0 +1,42 @@
+# Maintainer:  TDY <tdy@archlinux.info>
+# Contributor: nikitines <nikitin.evgeni@gmail.com>
+# Contributor: Noneus <N_O_N_E_U_S at noneus.de>
+
+pkgname=furiusisomount
+pkgver=0.11.3.1
+pkgrel=1
+pkgdesc="A PyGTK interface for managing ISO/IMG/BIN/MDF/NRG image files"
+arch=('any')
+url="https://launchpad.net/furiusisomount"
+license=('GPL3')
+depends=('desktop-file-utils' 'fuseiso' 'pygtk')
+install=$pkgname.install
+source=(http://launchpad.net/$pkgname/python/$pkgver/+download/${pkgname}_$pkgver.tar.gz
+        $pkgname.desktop)
+sha256sums=('ea16ac56343e94e3563c447e0b9ecce7700ffbcd7d3c0d32c7792405f3c302a2'
+            '421bd8c4dfa465190225dd12b306fdbf7920b6861ac8ad5489f105e5aac9a1c8')
+
+package() {
+  cd "$srcdir/${pkgname}_$pkgver"
+
+  # python2
+  find src -name '*.py' -exec sed -i '1s/python/&2/' '{}' \;
+  sed -i "s/python/&2/; 2a\cd /usr/share/$pkgname" $pkgname
+
+  # dist
+  install -dm755 "$pkgdir"/usr/share/$pkgname/{pix,res,src}
+  install -m644 pix/* "$pkgdir/usr/share/$pkgname/pix/"
+  install -m644 res/main_window.glade "$pkgdir/usr/share/$pkgname/res/"
+  install -m644 src/* "$pkgdir/usr/share/$pkgname/src/"
+
+  # launchers
+  install -Dm755 $pkgname "$pkgdir/usr/bin/$pkgname"
+  install -Dm644 ../$pkgname.desktop "$pkgdir/usr/share/applications/$pkgname.desktop"
+
+  # locales
+  for _mo in $(find locale -name '*.mo'); do
+    install -Dm644 $_mo "$pkgdir/usr/share/$_mo"
+  done
+}
+
+# vim:set ts=2 sw=2 et:

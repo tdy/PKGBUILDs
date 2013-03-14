@@ -1,0 +1,28 @@
+# Maintainer:  TDY <tdy@archlinux.info>
+# Contributor: Aaron Griffin <aaron@archlinux.org>
+# Contributor: Tom Newsom <Jeepster@gmx.co.uk>
+
+pkgname=fte
+pkgver=0.50.02
+pkgrel=1
+pkgdesc="A free text editor for developers"
+arch=('i686' 'x86_64')
+url="http://fte.sourceforge.net/"
+license=('GPL')
+depends=('gcc-libs' 'gpm>=1.20.4' 'libxpm' 'slang')
+source=(http://downloads.sourceforge.net/$pkgname/$pkgname-20110708-src.zip
+        http://downloads.sourceforge.net/$pkgname/$pkgname-20110708-common.zip)
+sha256sums=('d6311c542d3f0f2890a54a661c3b67228e27b894b4164e9faf29f014f254499e'
+            '58411578b31958765f42d2bf29b7aedd9f916955c2c19c96909a1c03e0246af7')
+
+build() {
+  cd "$srcdir/$pkgname"
+  make PREFIX=/usr clean all
+}
+
+package() {
+  cd "$srcdir/$pkgname"
+  make PREFIX="$pkgdir/usr" install
+}
+
+# vim:set ts=2 sw=2 et:
