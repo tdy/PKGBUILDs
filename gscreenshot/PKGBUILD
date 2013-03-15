@@ -1,0 +1,32 @@
+# Maintainer:  TDY <tdy@archlinux.info>
+# Contributor: Matej Horváth <matej.horvath@gmail.com>
+
+pkgname=gscreenshot
+pkgver=1.3
+pkgrel=5
+pkgdesc="A GUI front-end for scrot"
+arch=('i686' 'x86_64')
+url="http://gscreenshot.googlecode.com/"
+license=('GPL')
+depends=('libglade' 'scrot' 'pygtk' 'python-imaging')
+source=(http://$pkgname.googlecode.com/svn/trunk/$pkgname-$pkgver.tar.gz
+        black-white_2-Style-applets-screenshooter.png
+        $pkgname.desktop)
+noextract=($pkgname-$pkgver.tar.gz)
+sha256sums=('3f45bd6573a1606cb245ebfd020754d023e966325b64a1b99b501a11f86fbc2e'
+            '796fa3c53502dd351f4c523cb9c831d11e1e87baaf7fcba9ad99dc57fe6d8cbd'
+            'f2e10bd7576c778251ad26ff7a5816071beeca5c9452b00320174c563a94e3fb')
+
+package() {
+  cd "$srcdir"
+  install -dm755 "$pkgdir/usr/share/$pkgname"
+  tar xzf $pkgname-$pkgver.tar.gz -C "$pkgdir/usr/share/$pkgname" \
+    --strip=1 --transform="s,$pkgname$,$pkgdir/usr/bin/$pkgname,"
+  install -Dm644 $pkgname.desktop \
+    "$pkgdir/usr/share/applications/$pkgname.desktop"
+  install -Dm644 black-white_2-Style-applets-screenshooter.png \
+    "$pkgdir/usr/share/pixmaps/$pkgname.png"
+  sed -i 's,/usr/bin/env python,&2,' "$pkgdir/usr/share/$pkgname/$pkgname.py"
+}
+
+# vim:set ts=2 sw=2 et:

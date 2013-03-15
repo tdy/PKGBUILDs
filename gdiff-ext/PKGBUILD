@@ -1,0 +1,31 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=gdiff-ext
+pkgver=0.3.2
+pkgrel=1
+pkgdesc="A Nautilus extension for launching file comparison tools"
+arch=('i686' 'x86_64')
+url="http://diff-ext.sourceforge.net/"
+license=('BSD')
+depends=('gnome-vfs' 'hicolor-icon-theme' 'nautilus>=2.14.0')
+makedepends=('intltool' 'pkgconfig>=0.9.0')
+options=('!libtool')
+install=$pkgname.install
+source=(http://downloads.sourceforge.net/${pkgname#g}/${pkgname#g}-$pkgver.tar.bz2
+        $pkgname-$pkgver.diff)
+sha256sums=('391572c9a9487c3ef2abda5e8577ef59341dec6a24abfc363049a5681d157803'
+            'd46a12600d6b470e06b9990c5db660638c5968743e97c5b7de9b5964fa341894')
+
+build() {
+  cd "$srcdir/${pkgname#g}-$pkgver"
+  patch -Np1 -i ../$pkgname-$pkgver.diff
+  ./configure --prefix=/usr --disable-schemas-install
+  make
+}
+
+package() {
+  cd "$srcdir/${pkgname#g}-$pkgver"
+  make GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1 DESTDIR="$pkgdir" install
+}
+
+# vim:set ts=2 sw=2 et:

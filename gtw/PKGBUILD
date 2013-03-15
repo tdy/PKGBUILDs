@@ -1,0 +1,27 @@
+# Maintainer:  TDY <tdy@archlinux.info>
+# Contributor: Dylon Edwards <deltaecho@archlinux.us>
+
+pkgname=gtw
+pkgver=0.0.9
+pkgrel=2
+pkgdesc="A graphical front-end for 'Translate Word'"
+arch=('i686' 'x86_64')
+url="http://savannah.nongnu.org/projects/twandgtw/"
+license=('GPL')
+depends=('gconf' 'tw')
+makedepends=('gob2' 'pkgconfig>=0.9.0')
+source=(http://download.savannah.gnu.org/releases/twandgtw/$pkgname-$pkgver.tar.bz2)
+sha256sums=('b58e722124956e4e2acdf09a418aba4bdb1ad0a7e6a2d22ec3c6ea251657bf80')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir/" install
+}
+
+# vim:set ts=2 sw=2 et:

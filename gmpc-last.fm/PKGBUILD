@@ -1,0 +1,29 @@
+# Maintainer:  TDY <tdy@archlinux.info>
+# Contributor: Arto Puranen <purcher@gmail.com>
+# Contributor: tobias <tobias@archlinux.org>
+
+pkgname=gmpc-last.fm
+pkgver=0.20.0
+pkgrel=1
+pkgdesc="A plugin for fetching artist images from last.fm"
+arch=('i686' 'x86_64')
+url="http://gmpcwiki.sarine.nl/"
+license=('GPL')
+depends=('gmpc>=0.16.2' 'gtk2>=2.8' 'libmpd>=0.15.98')
+makedepends=('intltool>=0.21' 'pkg-config>=0.9.0')
+options=('!libtool')
+source=(http://download.sarine.nl/Programs/${pkgname%-*}/$pkgver/${pkgname/./-}-$pkgver.tar.gz)
+sha256sums=('626a49a5c0f26955901038019cb81d62915c9b37a8b5f4be17438d7fd0c67960')
+
+build() {
+  cd "$srcdir/${pkgname/./-}-$pkgver"
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "$srcdir/${pkgname/./-}-$pkgver"
+  make DESTDIR="$pkgdir" install
+}
+
+# vim:set ts=2 sw=2 et:
