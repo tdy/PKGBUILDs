@@ -1,0 +1,22 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=guapdf
+pkgver=3.1_DEMO
+pkgrel=2
+pkgdesc="GUAranteed PDF Decrypter"
+arch=('i686')
+url="http://www.guapdf.com/"
+license=('custom')
+depends=('glibc')
+source=(http://www.$pkgname.com/download/$pkgname-${pkgver/_/-}.tar.gz
+        COPYING)
+sha256sums=('1a9b4a284d99f2e8276f259942d3955c3c5acb311f912572c2646889b7f3870f'
+            'd729990fb18ad65a1d8d1afb03a6a772fa9d270f687cc6a36956d84f1fe8196c')
+
+package() {
+  cd "$srcdir"
+  install -Dm755 $pkgname/$pkgname "$pkgdir/usr/bin/$pkgname"
+  install -Dm644 COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+}
+
+# vim:set ts=2 sw=2 et:

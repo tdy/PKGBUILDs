@@ -1,0 +1,30 @@
+# Maintainer:  TDY <tdy@archlinux.info>
+# Contributor: Michele Vascellari <michele.vascellari@gmail.com>
+
+pkgname=gtkmm-utils
+pkgver=0.4.1
+pkgrel=2
+pkgdesc="High level utility functions/classes/widgets for gtkmm and glibmm"
+arch=('i686' 'x86_64')
+url="http://gtkmm-utils.googlecode.com/"
+license=('GPL')
+depends=('gtkmm')
+makedepends=('pkgconfig>=0.9.0')
+source=(http://$pkgname.googlecode.com/files/$pkgname-$pkgver.tar.gz
+        $pkgname-glib.diff)
+sha256sums=('bce5d908d1bec9cec0a74514458e6b9cf5198835fc6383c94d27ba388aae938d'
+            '55302c5b4a33910ef0c07bee459bff1290baeeb0503ca6be444c2a98ff9d8037')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  patch -Np1 -i "$srcdir/$pkgname-glib.diff"
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir" install
+}
+
+# vim:set ts=2 sw=2 et:

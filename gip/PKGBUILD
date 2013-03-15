@@ -1,0 +1,30 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=gip
+pkgver=1.7.0_1
+pkgrel=1
+pkgdesc="An IP address calculator"
+arch=('i686' 'x86_64')
+url="http://gip.googlecode.com/"
+license=('GPL')
+depends=('desktop-file-utils' 'gtkmm>=2.4' 'libsigc++' 'shared-mime-info')
+makedepends=('gettext' 'intltool' 'pkgconfig')
+options=('!emptydirs')
+install=gip.install
+source=(http://gip.googlecode.com/files/gip-${pkgver/_/-}.tar.gz
+        gip-$pkgver.diff)
+sha256sums=('c525886d90d496839b6a51e3ab771f2511abfea2fcb78cfcfe82059a4e53c6b9'
+            '55c2e37ec5c8a4cf16cb4b6c512a3a3a1fc6311ed0465e5606d3c84fd145ca40')
+
+build() {
+  cd "$srcdir/gip-${pkgver/_/-}"
+  patch -Np1 -i ../gip-$pkgver.diff
+  ./build.sh --prefix /usr
+}
+
+package() {
+  cd "$srcdir/gip-${pkgver/_/-}"
+  ./build.sh --prefix "$pkgdir/usr" --install
+}
+
+# vim:set ts=2 sw=2 et:

@@ -1,0 +1,22 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=goco
+pkgver=1.0
+pkgrel=1
+pkgdesc="A minimalistic Tcl/Tk front-end for GNU Go"
+arch=('i686' 'x86_64')
+url="http://stud4.tuwien.ac.at/~e0225855/"
+license=('custom')
+depends=('gnugo' 'tk')
+source=(http://stud4.tuwien.ac.at/~e0225855/various/$pkgname.tcl
+        LICENSE)
+sha256sums=('acab08586a8cec9aee08b993bcb13abf195103dcdb56e223909974731e45e8ee'
+            'f3890429391ac09e9a6fa8351e4743046b66bf7db805984c63a92242ff91c256')
+
+package() {
+  cd "$srcdir"
+  install -Dm755 $pkgname.tcl "$pkgdir/usr/bin/$pkgname"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+# vim:set ts=2 sw=2 et:

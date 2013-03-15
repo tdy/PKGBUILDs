@@ -1,0 +1,26 @@
+# Maintainer:  TDY <tdy@archlinux.info>
+# Contributor: Artyom 'logus' Pervukhin <logus9@gmail.com>
+
+pkgname=gaffitter
+pkgver=0.6.0
+pkgrel=1
+pkgdesc="A command line utility for optimizing file allocation via a genetic algorithm"
+arch=('i686' 'x86_64')
+url="http://gaffitter.sourceforge.net/"
+license=('GPL3')
+depends=('gcc-libs')
+source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.bz2)
+sha256sums=('61236240942d0319fb1c0a7e3da8424ddad7fe5abc82c2e1e3f2a89ccc9fe275')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make CXXFLAGS="$CXXFLAGS"
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir/usr/" install
+  install -Dm644 README "$pkgdir/usr/share/doc/$pkgname/README"
+}
+
+# vim:set ts=2 sw=2 et:

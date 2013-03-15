@@ -1,0 +1,40 @@
+# Maintainer:  TDY <tdy@archlinux.info>
+# Contributor: melchips <truphemus.francois + gmail + com>
+# Contributor: Dmitry N. Shilov <stormblast@land.ru>
+
+pkgname=gwhere
+pkgver=0.2.3
+pkgrel=5
+pkgdesc="A catalog manager for CDs, portable HDDs, and other removable media"
+arch=('i686' 'x86_64')
+url="http://www.gwhere.org/"
+license=('GPL')
+depends=('gtk2')
+options=('!libtool')
+source=(http://www.$pkgname.org/download/source/$pkgname-$pkgver.tar.gz)
+sha256sums=('d864b1f99f0ad6a034daab2bd0a80fd84eaa3478a9be591e8b08809f2d4985cd')
+
+build() {
+  [[ $CARCH == x86_64 ]] && export CFLAGS+=" -fPIC"
+
+  cd "$srcdir/$pkgname-$pkgver"
+  sed -i 's|gnome/apps/||; s|applnk/||; s/Applications/applications/' Makefile.in
+  sed -i '/^Name/ s/=.*/=GWhere/' $pkgname.desktop
+
+  # Fix for parsing error in the INTL Makefile
+  sed -i 's/^@GT_YES@intlh\.inst: intlh\.inst\.in \.\.\/config.status$/& \\/g' \
+    intl/Makefile.in
+
+  # Fix for missing libgmodule-2.0 on linking
+  sed -i 's/gwhere_LDADD = /&-lgmodule-2.0/g' src/Makefile.in
+
+  ./configure --prefix=/usr --mandir=/usr/share/man --libdir=/usr/lib --enable-gtk20
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir/" install
+}
+
+# vim:set ts=2 sw=2 et:
