@@ -1,0 +1,31 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=hgview
+pkgver=1.7.1
+pkgrel=1
+pkgdesc="A fast Mercurial log navigator"
+arch=('any')
+url="http://www.logilab.org/project/hgview/"
+license=('GPL')
+depends=('mercurial>=1.6')
+optdepends=('python2-qscintilla: for Qt interface'
+            'python2-docutils: for Qt interface'
+            'python2-urwid: for CLI interface'
+            'python2-pyinotify: for CLI interface'
+            'python2-pygments: for CLI interface')
+makedepends=('python2-pyqt' 'asciidoc' 'xmlto')
+source=(http://download.logilab.org/pub/$pkgname/$pkgname-$pkgver.tar.gz)
+sha256sums=('633862c3a2313e5f2432f19b9da9fa19a1ca8f2f2cd0b86df019832e86afc001')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  python2 setup.py build
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  sed -i '/^MANDIR=/s,man,share/&,' doc/Makefile
+  python2 setup.py install --root="$pkgdir" --optimize=1
+}
+
+# vim:set ts=2 sw=2 et:
