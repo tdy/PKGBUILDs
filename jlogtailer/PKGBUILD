@@ -1,0 +1,23 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=jlogtailer
+pkgver=2.0.0
+pkgrel=1
+pkgdesc="A small Java client for monitoring log files in real time"
+arch=('i686' 'x86_64')
+url="http://www.jibble.org/jlogtailer.php"
+license=('GPL')
+depends=('java-runtime>=6')
+source=(http://www.jibble.org/files/JLogTailer.jar
+        $pkgname.sh)
+noextract=(JLogTailer.jar)
+sha256sums=('2c8e30c35ee6cb544ae971eedacb8f64d24153617063c56f2608fd9fae065d5e'
+            '1d802aeb14119aa4bda8493297c32c79377365de885577088e894b0dec6e032f')
+
+package() {
+  cd "$srcdir"
+  install -Dm644 JLogTailer.jar "$pkgdir/usr/share/java/$pkgname/JLogTailer.jar"
+  install -Dm755 $pkgname.sh "$pkgdir/usr/bin/$pkgname"
+}
+
+# vim:set ts=2 sw=2 et:
