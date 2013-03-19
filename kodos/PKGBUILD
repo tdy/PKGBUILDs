@@ -1,0 +1,30 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=kodos
+pkgver=2.4.9
+pkgrel=1
+pkgdesc="A Python regular expression debugger"
+arch=('i686' 'x86_64')
+url="http://kodos.sourceforge.net/"
+license=('GPL')
+depends=('pyqt3')
+source=(http://downloads.sourceforge.net/kodos/kodos-$pkgver.tar.gz
+        kodos.desktop)
+sha256sums=('24e781a2fb74c890992fe8bc572b91ae1a0122ff572857e31d5455a9bc72094c'
+            '859f7b32351c9ce015a0fadbc98f2de441b72380c69efa00933b5c84e11d06e5')
+
+build() {
+  cd "$srcdir/kodos-$pkgver"
+  ln -sf kodos{.py,}
+  sed -i '39 s/\.py//' setup.py
+  python2 setup.py build
+}
+
+package() {
+  cd "$srcdir/kodos-$pkgver"
+  python2 setup.py install --prefix=/usr --root="$pkgdir"
+  install -Dm644 images/kodos_icon.png "$pkgdir/usr/share/pixmaps/kodos.png"
+  install -Dm644 ../kodos.desktop "$pkgdir/usr/share/applications/kodos.desktop"
+}
+
+# vim:set ts=2 sw=2 et:

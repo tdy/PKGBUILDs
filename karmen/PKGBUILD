@@ -1,0 +1,28 @@
+# Maintainer:  TDY <tdy@archlinux.info>
+# Contributor: Christoph Zeiler <rabyte*gmail>
+
+pkgname=karmen
+pkgver=0.15
+pkgrel=1
+pkgdesc="An easy-to-use window manager for X"
+arch=('i686' 'x86_64')
+url="http://karmen.sourceforge.net/"
+license=('MIT')
+depends=('libsm' 'libx11')
+source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz)
+sha256sums=('29b7fa1da581d3a22d6db82ce6b6b6e396be9b6b0af2091b8c043040e6e2b980')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  sed -i 's/LICENSE //' Makefile.in
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir" install
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+# vim:set ts=2 sw=2 et:
