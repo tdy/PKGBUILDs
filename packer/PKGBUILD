@@ -1,0 +1,41 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=packer
+pkgver=20130322
+pkgrel=1
+pkgdesc="A bash wrapper for pacman and the AUR"
+arch=('i686' 'x86_64')
+url="http://github.com/tdy/packer"
+license=('GPL')
+depends=('jshon')
+makedepends=('git')
+optdepends=('sudo: install and update as non-root')
+
+_gitroot=https://github.com/tdy/packer.git
+_gitname=packer
+
+build() {
+  cd "$srcdir"
+  msg "Connecting to GIT server...."
+
+  if [[ -d $_gitname ]]; then
+    (cd $_gitname && git pull origin)
+    msg "The local files are updated."
+  else
+    git clone $_gitroot $_gitname
+  fi
+
+  msg "GIT checkout done or server timeout"
+  msg "Starting build..."
+
+  rm -rf $_gitname-build
+  git clone $_gitname $_gitname-build
+}
+
+package() {
+  cd "$srcdir/$_gitname-build"
+  install -Dm755 $_gitname "$pkgdir/usr/bin/$pkgname"
+  install -Dm644 $_gitname.8 "$pkgdir/usr/share/man/man8/$pkgname.8"
+}
+
+# vim:set ts=2 sw=2 et:
