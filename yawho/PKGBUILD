@@ -1,0 +1,24 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=yawho
+pkgver=1.2
+pkgrel=1
+pkgdesc="yet another who implementation"
+arch=('i686' 'x86_64')
+url="http://wizard.ae.krakow.pl/~mike/#yawho"
+license=('GPL')
+depends=('glibc')
+source=(http://wizard.ae.krakow.pl/~mike/download/$pkgname-$pkgver.tar.gz)
+sha256sums=('983287063204372e6bbb70f8dc1b2665fc041ccb6d8d7fd5ac1d8d4cf9a34ef1')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  install -Dm755 "$srcdir/$pkgname-$pkgver/$pkgname" "$pkgdir/usr/bin/$pkgname"
+}
+
+# vim:set ts=2 sw=2 et:
