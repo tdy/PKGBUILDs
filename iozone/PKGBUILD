@@ -1,0 +1,28 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=iozone
+pkgver=3_373
+pkgrel=1
+pkgdesc="A filesystem benchmark tool"
+arch=('i686' 'x86_64' 'ppc')
+url="http://www.iozone.org/"
+license=('custom')
+optdepends=('gnuplot: for generating graph reports')
+install=$pkgname.install
+source=(http://www.$pkgname.org/src/current/$pkgname$pkgver.tar
+        $pkgname-$pkgver.diff)
+sha256sums=('ad6642f9c6659c3aec2c9dacece6d9a45bfa09e187999b8a4b5a54cf7f646626'
+            '3bac2e2be7a62af738fb45aa44e6170215094d203d016d3518418609c2148658')
+
+build() {
+  cd "$srcdir/$pkgname$pkgver/src/current"
+  patch -Np2 -i "$srcdir/$pkgname-$pkgver.diff"
+  make linux-$CARCH CFLAGS="$CFLAGS"
+}
+
+package() {
+  cd "$srcdir/$pkgname$pkgver/src/current"
+  make DESTDIR="$pkgdir" install
+}
+
+# vim:set ts=2 sw=2 et:

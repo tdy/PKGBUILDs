@@ -1,0 +1,33 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=aws
+pkgver=1.80
+pkgrel=1
+pkgdesc="A simple Perl interface to Amazon's EC2/S3/SQS/SDB/ELB services"
+arch=('i686' 'x86_64')
+url=http://timkay.com/aws/
+license=('custom')
+install=aws.install
+source=(aws-$pkgver::https://github.com/timkay/aws/raw/master/aws
+        aws{rc,secret})
+sha256sums=('96b692bcdfaf3fcc59a050f3b6ac6fc15d3a89a1333de25708bf20a62bef96a9'
+            '56e97b20a82310b9a00fbcbfad00552689d84d393b3a3d563112d32e16ac0735'
+            '91cdafd4793fdf65eba5aaa63b84d6772b6abfdcfb047aac317b6c5fe16ede4e')
+
+build() {
+  cd "$srcdir"
+  sed -n '3,17 s/#[ ]*//p' aws-$pkgver > COPYING
+}
+
+package() {
+  cd "$srcdir"
+  install -Dm755 aws-$pkgver "$pkgdir/usr/bin/aws"
+  install -Dm644 awsrc "$pkgdir/usr/share/aws/awsrc"
+  install -Dm644 awssecret "$pkgdir/usr/share/aws/awssecret"
+  install -Dm644 COPYING "$pkgdir/usr/share/licenses/aws/COPYING"
+
+  cd "$pkgdir/usr/bin"
+  ./aws --link=short
+}
+
+# vim:set ts=2 sw=2 et:

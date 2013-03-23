@@ -1,0 +1,44 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=clonekeen
+pkgver=8.4
+pkgrel=2
+pkgdesc="A clone of the classic DOS game, Commander Keen: Invasion of the Vorticons"
+arch=('i686' 'x86_64')
+url="http://clonekeen.sourceforge.net/"
+license=('GPL3')
+depends=('gcc-libs' 'sdl')
+install=$pkgname.install
+source=(http://$pkgname.sourceforge.net/files/$pkgname-src-${pkgver/.}.tar.gz
+        http://$pkgname.sourceforge.net/files/1keen131.zip
+        $pkgname.desktop
+        $pkgname.png
+        $pkgname.sh)
+noextract=(1keen131.zip)
+sha256sums=('9e8b5b6d8d47a19d249248608408188e1135d412e328343173b39ca8e0a6b8f5'
+            'e675345da66bb6313f386d88c3cafe25cc44908a055935298089c2c2e83b3a41'
+            '3531028c97f00efdcf2661b9d05fa03b4055580a04ba875abc3e5b1b974c2bc8'
+            '274aa8734a29f6251dcec6bac451f424b443feff22aa24b835cfb06677610d94'
+            'deafcc5bf747b1854658fc5a34b8e4c64fb4a234a8b177975011dd2ba4d51771')
+
+build() {
+  cd "$srcdir/keen/src"
+  sed -i "s#gcc -O2#gcc $CFLAGS#g" Makefile
+  sed -i "s#-lSDL -lSDLmain -lstdc++#-lm -lSDL -lSDLmain -lstdc++#g" Makefile
+  make
+}
+
+package() {
+  cd "$srcdir"
+  install -Dm755 $pkgname.sh "$pkgdir/usr/bin/$pkgname"
+  install -Dm644 $pkgname.png "$pkgdir/usr/share/pixmaps/$pkgname.png"
+  install -Dm644 $pkgname.desktop "$pkgdir/usr/share/applications/$pkgname.desktop"
+
+  install -Dm755 keen/src/keen "$pkgdir/usr/lib/$pkgname/keen"
+  cp -a keen/bin/* "$pkgdir/usr/lib/$pkgname"
+  bsdtar -xf 1keen131.zip -C "$pkgdir/usr/lib/$pkgname/data"
+  find "$pkgdir/usr/lib/$pkgname" -type f ! -name keen -exec chmod 644 '{}' \;
+  find "$pkgdir/usr/lib/$pkgname" -type d -exec chmod 755 '{}' \;
+}
+
+# vim:set ts=2 sw=2 et:
