@@ -1,0 +1,29 @@
+# Maintainer:  TDY <tdy@archlinux.info>
+# Contributor: Christoph Zeiler <rabyte__gmail>
+
+pkgname=nhopkg
+pkgver=0.5.1
+pkgrel=1
+pkgdesc="A universal package manager using .nho (binary) and .src.nho (source) packages"
+arch=('any')
+url="http://nhopkg.sourceforge.net/"
+license=('GPL3')
+depends=('bzip2' 'coreutils' 'findutils' 'grep' 'mlocate' 'shared-mime-info'
+         'tar' 'wget')
+makedepends=('gettext' 'pkgconfig>=0.9')
+install=nhopkg.install
+source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.bz2)
+sha256sums=('da43427f27808de4d8b0a3305df6e1c9aa4fd0dbc4b6fa70afbd5b17364fb551')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  ./configure	--prefix=/usr --sysconfdir=/etc --localstatedir=/var
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir" install
+}
+
+# vim:set ts=2 sw=2 et:

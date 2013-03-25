@@ -1,0 +1,26 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=njiiri
+pkgver=0.3.9
+pkgrel=2
+pkgdesc="A Ruby-GTK+ client for MPD"
+arch=('i686' 'x86_64')
+url="http://www.red-bean.com/decklin/njiiri/"
+license=('MIT')
+depends=('ruby-gnome2' 'ruby-libglade' 'ruby-librmpd')
+source=(http://www.red-bean.com/decklin/$pkgname/$pkgname-$pkgver.tar.gz
+        $pkgname-$pkgver-$pkgrel.diff)
+sha256sums=('075afc21bb15a0efc66209ec6fffa0e38ac4689cd751fe0044c86df36635aa2b'
+            'fcdc6528ecde7e3c39cb853c0c2af3104db1173d49e377a29cab62261a763682')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  patch -Np1 -i ../$pkgname-$pkgver-$pkgrel.diff
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  ./install /usr "$pkgdir"
+}
+
+# vim:set ts=2 sw=2 et:
