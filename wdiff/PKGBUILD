@@ -1,0 +1,26 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=wdiff
+pkgver=1.2.1
+pkgrel=1
+pkgdesc="A wordwise implementation of GNU diff"
+arch=('i686' 'x86_64')
+url="http://www.gnu.org/software/$pkgname/"
+license=('GPL3')
+depends=('ncurses')
+install=wdiff.install
+source=(http://ftp.gnu.org/gnu/$pkgname/$pkgname-$pkgver.tar.gz)
+sha256sums=('8158d276c0db62ebb1ee20c738751c68e86fd21b7898cf57524dcde8e38565bd')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir" install
+}
+
+# vim:set ts=2 sw=2 et:

@@ -1,0 +1,30 @@
+# Maintainer:  TDY <tdy@archlinux.info>
+# Contributor: Hannes Rist <cowider@gmail.com>
+
+pkgname=whitenoise
+pkgver=1.0.2
+pkgrel=1
+pkgdesc="An ambient random noise generator"
+arch=('i686' 'x86_64')
+url="http://pessimization.com/software/whitenoise/"
+license=('GPL')
+optdepends=('fftw: generate filter frequency plots (rebuild required)'
+            'gnuplot: also needed for plots (no rebuild required)')
+source=(http://pessimization.com/software/$pkgname/$pkgname-$pkgver.tar.gz
+        $pkgname.1)
+sha256sums=('165ccafae98cd6d84d8f58264b7001a165d4bd9e4262a120c465ccbe12f6ee21'
+            '2eb293c7cc70b7bea32b56635775450247d1121cb614160ddf7302b02c314724')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  ./configure --prefix=/usr --disable-arts --disable-fftw
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  install -Dm755 $pkgname "$pkgdir/usr/bin/$pkgname"
+  install -Dm644 ../$pkgname.1 "$pkgdir/usr/share/man/man1/$pkgname.1"
+}
+
+# vim:set ts=2 sw=2 et:

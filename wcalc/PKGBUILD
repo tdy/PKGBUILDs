@@ -1,0 +1,26 @@
+# Maintainer:  TDY <tdy@archlinux.info>
+# Contributor: Bernhard Walle <bernhard.walle@gmx.de>
+
+pkgname=wcalc
+pkgver=2.4
+pkgrel=1
+pkgdesc="A flexible command-line scientific calculator"
+arch=('i686' 'x86_64')
+url="http://w-calc.sourceforge.net/"
+license=('GPL')
+depends=('mpfr')
+source=(http://downloads.sourceforge.net/w-calc/$pkgname-$pkgver.tar.bz2)
+sha256sums=('aa2342078b9e75f821b0cc5d30f3434aa9cdf9af170e8a3e9af82286682be226')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir/" install
+}
+
+# vim:set ts=2 sw=2 et:
