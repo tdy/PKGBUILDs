@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Pida
+Comment=Python Integrated Development Application
+Icon=pida
+Exec=pida %F
+Terminal=false
+Type=Application
+Categories=Development;IDE;

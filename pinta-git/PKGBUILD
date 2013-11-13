@@ -1,0 +1,49 @@
+# Maintainer:  TDY <tdy@archlinux.info>
+# Contributor: György Balló <ballogy@freestart.hu>
+
+pkgname=pinta-git
+pkgver=20130129
+pkgrel=1
+pkgdesc="A drawing/editing program modeled after Paint.NET"
+arch=('any')
+url="http://pinta-project.com/"
+license=('MIT')
+depends=('mono-addins' 'desktop-file-utils' 'hicolor-icon-theme' 'xdg-utils')
+makedepends=('git' 'intltool>=0.35.0')
+provides=('pinta')
+conflicts=('pinta')
+install=$pkgname.install
+
+_gitroot=https://github.com/PintaProject/Pinta.git
+_gitname=pinta
+
+build() {
+  cd "$srcdir"
+  msg "Connecting to GIT server...."
+
+  if [[ -d $_gitname ]]; then
+    (cd $_gitname && git pull origin)
+    msg "The local files are updated."
+  else
+    git clone $_gitroot $_gitname
+  fi
+
+  msg "GIT checkout done or server timeout"
+  msg "Starting build..."
+
+  rm -rf $_gitname-build
+  git clone $_gitname $_gitname-build
+  cd $_gitname-build
+
+  ./autogen.sh --prefix=/usr --sysconfdir=/etc --localstatedir=/var
+  make
+}
+
+package() {
+  cd "$srcdir/$_gitname-build"
+  make DESTDIR="$pkgdir/" install
+  install -Dm644 license-mit.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE.mit"
+  install -Dm644 license-pdn.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE.pdn"
+}
+
+# vim:set ts=2 sw=2 et:

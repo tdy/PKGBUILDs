@@ -1,0 +1,24 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=rubyinline
+pkgver=3.8.4
+pkgrel=1
+pkgdesc="Embed C/++ external module code directly into Ruby code"
+arch=('any')
+url="http://rubyinline.rubyforge.org/RubyInline/"
+license=('MIT')
+depends=('ruby')
+source=(http://rubyforge.org/frs/download.php/67846/RubyInline-$pkgver.gem
+        LICENSE)
+sha256sums=('58a7899dd5db81070cae58f3c9e1083117abf533d7ccb4addc16d40bd5aadc7e'
+            'a5fa9c9617222aacc41ca0764539d1bf4a0ca065f2a2ae7ce1aab6d69d43e58d')
+
+package() {
+  cd "$srcdir"
+  local _gemdir="$(ruby -rubygems -e 'puts Gem.default_dir')"
+  gem install --ignore-dependencies -i "$pkgdir$_gemdir" \
+    -n "$pkgdir/usr/bin" RubyInline-$pkgver.gem || return 1
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+# vim:set ts=2 sw=2 et:

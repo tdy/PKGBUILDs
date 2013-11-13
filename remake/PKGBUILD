@@ -1,0 +1,26 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=remake
+pkgver=3.82_0.9
+pkgrel=1
+pkgdesc="A modernized GNU make utility with improved tracing, error reporting, and debugging"
+arch=('i686' 'x86_64')
+url="http://bashdb.sourceforge.net/remake/"
+license=('GPL')
+depends=('readline')
+install=$pkgname.install
+source=(http://downloads.sourceforge.net/bashdb/$pkgname-${pkgver%_*}+dbg${pkgver/*_}.tar.bz2)
+sha256sums=('491c6da004a3517a6c76d62017279374fd594f5c09c823b4de53e81180c4041a')
+
+build() {
+  cd "$srcdir/$pkgname-${pkgver%_*}+dbg${pkgver/*_}"
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-${pkgver%_*}+dbg${pkgver/*_}"
+  make DESTDIR="$pkgdir" install
+}
+
+# vim:set ts=2 sw=2 et:

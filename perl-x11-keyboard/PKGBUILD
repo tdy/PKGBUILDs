@@ -1,0 +1,29 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=perl-x11-keyboard
+pkgver=1.4
+pkgrel=1
+pkgdesc="Perl keyboard support functions for X11"
+arch=('any')
+url="http://search.cpan.org/dist/X11-Keyboard/"
+license=('MIT')
+depends=('perl-x11-protocol')
+options=('!emptydirs')
+source=(http://search.cpan.org/CPAN/authors/id/E/EC/ECALDER/X11-Keyboard-$pkgver.tar.gz
+        LICENSE)
+sha256sums=('166b456290ca3e1fdd441987a96b743923f973c5d5d581daa1ec851edfb6461d'
+            'a9874d542b6b467e40aa643159221bda69e25e61e00077106d33420c88331c81')
+
+build() {
+  cd "$srcdir/X11-Keyboard-$pkgver"
+  PERL_MM_USE_DEFAULT=1 perl Makefile.PL INSTALLDIRS=vendor
+  make
+}
+
+package() {
+  cd "$srcdir/X11-Keyboard-$pkgver"
+  make DESTDIR="$pkgdir" install
+  install -Dm644 ../LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+# vim:set ts=2 sw=2 et:

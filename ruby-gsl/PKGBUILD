@@ -1,0 +1,30 @@
+# Contributor: TDY <tdy@archlinux.info>
+# Contributor: Maksim Sipos (maxsipos at gmail dot com)
+
+pkgname=ruby-gsl
+pkgver=1.14.7
+pkgrel=1
+pkgdesc="A Ruby interface to the GNU Scientific Library"
+arch=('i686' 'x86_64')
+url="http://ruby-gsl.sourceforge.net/"
+license=('GPL')
+depends=('gsl>=1.14' 'ruby')
+optdepends=('plotutils')
+source=(http://rubyforge.org/frs/download.php/74341/rb-gsl-$pkgver.tgz
+        https://rubyforge.org/tracker/download.php/285/1169/29353/5296/rb-gsl-complex-vector-matrix-equal.diff)
+sha256sums=('1179af6ff1b3fa91601668f673a6a526fb11d57ad4869831bf75577c72570eae'
+            'cd1856a2d874825dcd57bcb36348382bca461fcabb66c18303a74cfe576292a2')
+
+build() {
+  cd "$srcdir/rb-gsl-$pkgver"
+  patch -Np0 -i ../rb-gsl-complex-vector-matrix-equal.diff
+  ruby setup.rb config --siteruby=/usr/lib/ruby/vendor_ruby
+  ruby setup.rb setup
+}
+
+package() {
+  cd "$srcdir/rb-gsl-$pkgver"
+  ruby setup.rb install --prefix="$pkgdir"
+}
+
+# vim:set ts=2 sw=2 et:

@@ -1,0 +1,31 @@
+# Maintainer:  TDY <tdy@archlinux.info>
+# Contributor: Dmitry N. Shilov <stormblast@land.ru>
+
+pkgname=mp3val
+pkgver=0.1.8
+pkgrel=1
+pkgdesc="A tool for validating and repairing MPEG audio streams"
+arch=('i686' 'x86_64')
+url="http://mp3val.sourceforge.net/"
+license=('GPL')
+depends=('gcc-libs')
+source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver-src.tar.gz
+        $pkgname-$pkgver.diff
+        $pkgname.1)
+sha256sums=('95a16efe3c352bb31d23d68ee5cb8bb8ebd9868d3dcf0d84c96864f80c31c39f'
+            '1b66e545d3cfe75cea45f457ae30feaaa69674b19199844d8a8df4a05a85d9f3'
+            'a6fd0fcdc21f282db3c260e343036f39b071bcd56db3e170ab1ed389df538c1b')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver-src"
+  patch -Np1 -i ../$pkgname-$pkgver.diff
+  make -f Makefile.linux CXXFLAGS="$CXXFLAGS"
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver-src"
+  install -Dm755 $pkgname "$pkgdir/usr/bin/$pkgname"
+  install -Dm644 ../$pkgname.1 "$pkgdir/usr/share/man/man1/$pkgname.1"
+}
+
+# vim:set ts=2 sw=2 et:

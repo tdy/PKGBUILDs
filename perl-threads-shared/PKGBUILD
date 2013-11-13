@@ -1,0 +1,27 @@
+# Maintainer:  TDY <tdy@archlinux.info>
+# Contributor: Max Nemeth <max.nemeth@gmail.com>
+
+pkgname=perl-threads-shared
+pkgver=1.36
+pkgrel=1
+pkgdesc="A Perl extension for sharing data structures between threads"
+arch=('any')
+url="http://search.cpan.org/dist/threads-shared/"
+license=('GPL' 'PerlArtistic')
+depends=('perl>=5.8.0')
+options=('!emptydirs')
+source=(http://search.cpan.org/CPAN/authors/id/J/JD/JDHEDDEN/threads-shared-$pkgver.tar.gz)
+sha256sums=('260f4bb5037415fc85f21c2ab389ee8fd7f90a15763a704c6b17b108c59a833d')
+
+build() {
+  cd "$srcdir/threads-shared-$pkgver"
+  PERL_MM_USE_DEFAULT=1 perl Makefile.PL INSTALLDIRS=vendor
+  make
+}
+
+package() {
+  cd  "$srcdir/threads-shared-$pkgver"
+  make DESTDIR="$pkgdir" install
+}
+
+# vim:set ts=2 sw=2 et:

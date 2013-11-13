@@ -1,0 +1,27 @@
+# Maintainer:  TDY <tdy@archlinux.info>
+# Contributor: Lex Black <autumn-wind at web dot de>
+
+pkgname=plzip
+pkgver=1.1
+pkgrel=1
+pkgdesc="A multi-threaded, lossless data compressor based on the LZMA algorithm"
+arch=('i686' 'x86_64')
+url="http://www.nongnu.org/lzip/plzip.html"
+license=('GPL3')
+depends=('gcc-libs' 'lzlib')
+install=plzip.install
+source=(http://download.savannah.gnu.org/releases/lzip/$pkgname-$pkgver.tar.gz)
+sha256sums=('77d935fc83ffe6a3e689edd67441291a94dbfc468653eba33524909ef5c71f63')
+
+build() {
+  cd $pkgname-$pkgver
+  ./configure --prefix=/usr --sysconfdir=/etc
+  make
+}
+
+package() {
+  cd $pkgname-$pkgver
+  make DESTDIR="$pkgdir/" install
+}
+
+# vim:set ts=2 sw=2 et:

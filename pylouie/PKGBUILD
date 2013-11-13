@@ -1,0 +1,22 @@
+# Maintainer:  TDY <tdy@archlinux.info>
+# Contributor: Paul Nicholson <brenix@gmail.com>
+# Contributor: crazy <francois.cojean@gmail.com>
+# Contributor: Jon Kristian Nilsen <jokr.nilsen@gmail.com>
+
+pkgname=pylouie
+pkgver=1.1
+pkgrel=2
+pkgdesc="A straightforward way to dispatch signals between objects in a wide variety of contexts"
+arch=('any')
+url="http://louie.berlios.de/"
+license=('BSD')
+depends=('python2-distribute' 'python2-nose>=0.8.3')
+source=(http://pypi.python.org/packages/source/L/Louie/Louie-$pkgver.tar.gz)
+sha256sums=('75f33f2978e9a7ba1f541c594d8e93d0c4a965a706db688fd11a77f4049e5a5b')
+
+package() {
+    cd "$srcdir/Louie-$pkgver"
+    python2 setup.py install --root="$pkgdir/" --optimize=1
+}
+
+# vim:set ts=2 sw=2 et:

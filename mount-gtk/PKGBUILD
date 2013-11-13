@@ -1,0 +1,30 @@
+# Maintainer:  TDY <tdy@archlinux.info>
+# Contributor: jsteel <mail at jsteel dot org>
+# Contributor: anonymous_user <31337h4ck3r at gmail dot com>
+# Contributor: Christoph Zeiler <rabyteNOSPAM_at_gmx.dot.org>
+
+pkgname=mount-gtk
+pkgver=1.4.2
+pkgrel=1
+pkgdesc="A graphical front end for udisks and mount"
+arch=('i686' 'x86_64')
+url="http://mount-gtk.sourceforge.net/"
+license=('GPL')
+depends=('c++-gtk-utils>=2.0.9' 'gtk3>=2.99.0' 'udisks2>=1.94.0')
+optdepends=('libnotify: error notifications')
+options=('!buildflags')
+source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz)
+sha256sums=('755a4aae98c8c14c909dfc8da2e46f32ce720137edecdb3d8fcdc99fa02dbd03')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir/" install
+}
+
+# vim:set ts=2 sw=2 et:

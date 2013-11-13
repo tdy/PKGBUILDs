@@ -1,0 +1,24 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=ps-watcher
+pkgver=1.08
+pkgrel=1
+pkgdesc="A Perl implementation of system monitoring"
+arch=('any')
+url="http://ps-watcher.sourceforge.net/"
+license=('GPL')
+depends=('perl-config-inifiles')
+source=(http://downloads.sourceforge.net/ps-watcher/ps-watcher-$pkgver.tar.gz)
+sha256sums=('2bd9a45123d720468b0c84549e124fddd2553f76838797b0ad1b19202760ca57')
+
+build() {
+  cd "$srcdir/ps-watcher-$pkgver"
+  ./configure --prefix=/usr --mandir=/usr/share/man
+  make
+}
+package() {
+  cd "$srcdir/ps-watcher-$pkgver"
+  make DESTDIR="$pkgdir/" install
+}
+
+# vim:set ts=2 sw=2 et:

@@ -1,0 +1,38 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=powerman
+pkgver=2.3.16
+pkgrel=1
+pkgdesc="A tool for manipulating remote power control (RPC) devices from a central location"
+arch=('i686' 'x86_64')
+url="http://code.google.com/p/powerman/"
+license=('GPL')
+options=('!libtool' '!emptydirs')
+install=$pkgname.install
+source=(http://$pkgname.googlecode.com/files/$pkgname-$pkgver.tar.gz
+        $pkgname.rc
+        $pkgname.service)
+sha256sums=('5ab2846d15a93917fe79190f7a7609c3c2e128c03d040edf365fbd4f80a985b2'
+            '56c249d9df77854d8ac598f71fd387a169144d039287cfc72366c3335a1efa9e'
+            '0947515dc8a4978f681b1fc4d8f73aade4772b06fb25e38c6669ca0b4e02db17')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  sed -i 's/init\.d/rc.d/' Makefile.in
+  ./configure --prefix=/usr --sysconfdir=/etc
+  make
+}
+
+check() {
+  cd "$srcdir/$pkgname-$pkgver"
+  #make -k check
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir/" install
+  install -Dm755 ../$pkgname.rc "$pkgdir/etc/rc.d/$pkgname"
+  install -Dm644 ../$pkgname.service "$pkgdir/usr/lib/systemd/system/$pkgname.service"
+}
+
+# vim:set ts=2 sw=2 et:

@@ -1,0 +1,22 @@
+# Maintainer:  TDY <tdy@archlinux.info>
+# Contributor: rabyte <rabyte__gmail>
+
+pkgname=musiql
+pkgver=0.0.20080602
+pkgrel=2
+pkgdesc="An MPlayer wrapper providing SQLite music library management"
+arch=('i686' 'x86_64')
+url="http://musiql.sourceforge.net/"
+license=('GPL')
+depends=('python2-pysqlite' 'mplayer' 'mutagen>=1.13')
+makedepends=('python2-distribute')
+optdepends=('lastfmsubmitd: Last.FM submission support')
+source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz)
+sha256sums=('19a865f32226b58d91b3111d5c5fbcb33b467f6584d4c5dec02efd11a6efe13f')
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1
+}
+
+# vim:set ts=2 sw=2 et:

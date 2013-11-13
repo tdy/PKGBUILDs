@@ -1,0 +1,25 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=perl-weather-underground
+pkgver=3.03
+pkgrel=1
+pkgdesc="A Perl extension for retrieving weather information from wunderground.com"
+arch=('i686' 'x86_64')
+url="http://search.cpan.org/dist/Weather-Underground/"
+license=('GPL' 'PerlArtistic')
+depends=('perl-libwww')
+source=(http://search.cpan.org/CPAN/authors/id/M/MN/MNAGUIB/Weather-Underground-$pkgver.tar.gz)
+sha256sums=('70e103e2240ed08e4b93ff778758dda617c99e48dadaf42040b359ba52e15a3f')
+
+build() {
+  cd "$srcdir/Weather-Underground-$pkgver"
+  PERL_MM_USE_DEFAULT=1 perl Makefile.PL INSTALLDIRS=vendor
+  make
+}
+
+package() {
+  cd "$srcdir/Weather-Underground-$pkgver"
+  make DESTDIR="$pkgdir" install
+}
+
+# vim:set ts=2 sw=2 et:

@@ -1,0 +1,27 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=quasi
+pkgver=0.87
+pkgrel=1
+pkgdesc="A multiple-context Python shell"
+arch=('any')
+url="http://quasi-shell.sourceforge.net/"
+license=('BSD')
+depends=('python2')
+source=(http://downloads.sourceforge.net/project/$pkgname-shell/$pkgname-shell/$pkgver/$pkgname.zip
+        LICENSE setup.py)
+sha256sums=('94bc032041ee0d148853de1c769c4141aabe79909e69329f3f2455537a368226'
+            'ef87c9ce473fb87f04da6a768a2dffe637298f383852c48f9d07180dd63d704f'
+            'c9eded733c4ce6cef0d1e15b40dade982a4d89156619574cc90e30157367f7d5')
+
+build() {
+  cd "$srcdir"
+  python2 setup.py build
+}
+
+package() {
+  cd "$srcdir"
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1
+}
+
+# vim:set ts=2 sw=2 et:

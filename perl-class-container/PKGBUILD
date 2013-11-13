@@ -1,0 +1,25 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=perl-class-container
+pkgver=0.12
+pkgrel=1
+pkgdesc="A Perl module that glues object frameworks together transparently"
+arch=('i686' 'x86_64')
+url="http://search.cpan.org/dist/Class-Container/"
+license=('GPL' 'PerlArtistic')
+depends=('perl-carp-clan' 'perl-params-validate')
+source=(http://search.cpan.org/CPAN/authors/id/K/KW/KWILLIAMS/Class-Container-$pkgver.tar.gz)
+sha256sums=('771206f2b7a916ce0dfb93d82200472beaeb910248482734179bf36808e486b1')
+
+build() {
+  cd "$srcdir/Class-Container-$pkgver"
+  PERL_MM_USE_DEFAULT=1 perl Makefile.PL INSTALLDIRS=vendor
+  make
+}
+
+package() {
+  cd "$srcdir/Class-Container-$pkgver"
+  make DESTDIR="$pkgdir" install
+}
+
+# vim:set ts=2 sw=2 et:

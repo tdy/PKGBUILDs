@@ -1,0 +1,30 @@
+# Maintainer:  TDY <tdy@gmx.com>
+# Contributor: Corrado Primier <cp663137@stud.polimi.it>
+# Contributor: Jens Persson <xerxes2 at gmail.com>
+
+pkgname=pyao
+pkgver=0.82
+pkgrel=5
+pkgdesc="Python ao wrapper library"
+arch=('any')
+url="http://ekyo.nerim.net/software/pyogg/"
+license=('GPL')
+depends=('libao' 'python2')
+source=(http://ekyo.nerim.net/software/pyogg/$pkgname-$pkgver.tar.gz
+        $pkgname-$pkgver-gentoo.diff)
+sha256sums=('9a444518252f6d747e76a219e5efbc05b4e1742260a7419da9ddf93a519b30c5'
+            '06f99b0a677d1575f3bd95e0ff8d195d64b4464f47ff652c0ff83c244b842a37')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  patch -Np0 -i ../$pkgname-$pkgver-gentoo.diff
+  python2 config_unix.py --prefix=/usr
+  python2 setup.py build
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  python2 setup.py install --root="$pkgdir"
+}
+
+# vim:set ts=2 sw=2 et:

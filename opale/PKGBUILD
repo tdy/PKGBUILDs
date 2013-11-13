@@ -1,0 +1,30 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=opale
+pkgver=1.1
+pkgrel=1
+pkgdesc="A personal bank account manager"
+arch=('i686' 'x86_64')
+url="http://freehackers.org/Opale/"
+license=('GPL')
+depends=('qt' 'hicolor-icon-theme' 'shared-mime-info')
+makedepends=('cmake' 'doxygen')
+install=opale.install
+source=(http://labs.freehackers.org/attachments/download/436/Opale-$pkgver.tar.bz2)
+sha256sums=('bbfc7e1cea6a10856e344aa84836d087a3906da7788c8a95ac709b2d34679579')
+
+build() {
+  cd "$srcdir/Opale-$pkgver"
+  mkdir build && cd build
+  cmake -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DENABLE_KDE=OFF ..
+  make
+}
+
+package() {
+  cd "$srcdir/Opale-$pkgver/build"
+  make DESTDIR="$pkgdir" install
+}
+
+# vim:set ts=2 sw=2 et:

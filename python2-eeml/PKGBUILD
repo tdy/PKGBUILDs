@@ -1,0 +1,25 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=python2-eeml
+pkgver=2.0.0
+pkgrel=1
+pkgdesc="A Python package for generating eeml documents"
+arch=('any')
+url="http://petervizi.github.com/python-eeml/"
+license=('GPL3')
+depends=('python2-lxml')
+makedepends=('python2-distribute')
+source=($pkgname-$pkgver.tgz::https://github.com/petervizi/${pkgname/2}/archive/$pkgver.tar.gz)
+sha256sums=('846d4abaa46d7427b502664ed2b19d2c5fb2982fb581e439e99d8f4598054c92')
+
+build() {
+  cd "$srcdir/${pkgname/2}-$pkgver"
+  python2 setup.py build
+}
+
+package() {
+  cd "$srcdir/${pkgname/2}-$pkgver"
+  python2 setup.py install --root="$pkgdir/" --optimize=1
+}
+
+# vim:set ts=2 sw=2 et:

@@ -1,0 +1,28 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=rtf2html
+pkgver=0.2.0
+pkgrel=1
+pkgdesc="An RTF to HTML converter"
+arch=('i686' 'x86_64')
+url="http://sourceforge.net/projects/rtf2html/"
+license=('LGPL')
+depends=('gcc-libs')
+source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.bz2
+        $pkgname-$pkgver-gcc44.diff)
+sha256sums=('13d39bdd3387aeba1e640d3209aa2ce56871291247734757d399675e4b8b918b'
+            'c75abb3ecbd109fd11ce8aa0fd99be69f509fad0364002c4fb56e875355d01f2')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  patch -Np1 -i ../$pkgname-$pkgver-gcc44.diff
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir/" install
+}
+
+# vim:set ts=2 sw=2 et:

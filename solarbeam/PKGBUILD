@@ -1,0 +1,24 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=solarbeam
+pkgver=1.0
+pkgrel=1
+pkgdesc="An application for drawing solar diagrams"
+arch=('i686' 'x86_64')
+url="http://solarbeam.sourceforge.net/"
+license=('GPL')
+depends=('mono>=2.0')
+source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.zip
+        $pkgname.launcher)
+noextract=($pkgname-$pkgver.zip)
+sha256sums=('9a1b12ba64e6c676145738bb6b67035ce90c6868c3236f86cdc15cca56cc3bf8'
+            '4df1888f7947575f58ad4dc0c39aecc5dc6c6fdab850bf3216fcd4b60bf0efdc')
+
+package() {
+  cd "$srcdir"
+  install -dm755 "$pkgdir/usr/share"
+  bsdtar -xf $pkgname-$pkgver.zip -C "$pkgdir/usr/share"
+  install -Dm755 $pkgname.launcher "$pkgdir/usr/bin/$pkgname"
+}
+
+# vim:set ts=2 sw=2 et:

@@ -1,0 +1,22 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=ruby-debug19
+pkgver=0.11.6
+pkgrel=2
+pkgdesc="A faster implementation of the standard debug.rb using native core Ruby 1.9.x APIs"
+arch=('any')
+url="http://rubyforge.org/projects/ruby-debug19/"
+license=('LGPL')
+depends=('ruby>=1.9')
+install=$pkgname.install
+source=(http://rubyforge.org/frs/download.php/63094/$pkgname-$pkgver.gem)
+sha256sums=('efb5d1f6861f738fd15802ebcc261b73bcd35aab27a8e0c2b4df13bc532138e6')
+
+build() {
+  cd "$srcdir"
+  local _gemdir="$(ruby -rubygems -e 'puts Gem.default_dir')"
+  gem install --ignore-dependencies $pkgname-$pkgver.gem -n "$pkgdir/usr/bin" \
+    -i "$pkgdir$_gemdir"
+}
+
+# vim:set ts=2 sw=2 et:

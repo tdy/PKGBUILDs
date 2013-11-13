@@ -1,0 +1,25 @@
+# Maintainer: TDY <tdy@gmx.com>
+
+pkgname=logtailer
+pkgver=0.5
+pkgrel=1
+pkgdesc="A small command-line utility for monitoring log files in real time"
+arch=('i686' 'x86_64')
+url="http://offog.org/code/"
+license=('GPL')
+source=(http://offog.org/files/$pkgname-$pkgver.tar.gz)
+sha256sums=('44339458cc64d31a41477d0b69e0467663fb9a0f6a1c7488b719acfa6ffaaf88')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  install -Dm755 $pkgname "$pkgdir/usr/bin/$pkgname"
+  install -Dm644 README "$pkgdir/usr/share/doc/$pkgname/README"
+}
+
+# vim:set ts=2 sw=2 et:

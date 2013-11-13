@@ -1,0 +1,22 @@
+# Maintainer:  TDY <tdy@archlinux.info>
+# Contributor: William Rea <sillywilly@gmail.com>
+
+pkgname=pyopenal
+pkgver=0.1.6
+pkgrel=3
+pkgdesc="Python bindings for OpenAL"
+arch=('any')
+url="http://home.gna.org/oomadness/en/pyopenal/"
+license=('LGPL')
+depends=('freealut' 'python2')
+makedepends=('setuptools')
+source=(http://download.gna.org/$pkgname/PyOpenAL-$pkgver.tar.gz)
+sha256sums=('94b69cc57fe5e5abe2876865a6e2264d180892e82ac2ed684dc8eaf2cbf1ec5e')
+
+package() {
+  cd "$srcdir/PyOpenAL-$pkgver"
+  sed -i '7,16 d' setup.py
+  python2 setup.py install --prefix=/usr --root="$pkgdir"
+}
+
+# vim:set ts=2 sw=2 et:

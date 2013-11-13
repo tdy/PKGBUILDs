@@ -1,0 +1,34 @@
+# Maintainer:  TDY <tdy@archlinux.info>
+# Contributor: Joerie de Gram <j.de.gram@gmail.com>
+
+pkgname=qttube
+pkgver=0.1
+pkgrel=1
+pkgdesc="A YouTube video downloader"
+arch=('i686')
+url="https://launchpad.net/qttube/"
+license=('GPL')
+depends=('hicolor-icon-theme' 'pyqt' 'youtube-dl>=2007.03.27')
+install=qttube.install
+source=(https://launchpad.net/$pkgname/0.x/$pkgver/+download/QtTube-$pkgver.tar.gz
+        setup.py)
+sha256sums=('9f396598ecc52a7a8ba6dbc3a379981f7d9a66d50327c1dbc6a47bbdc462c8cb'
+            '87609f449efcff0e830cc1c921032b3f3ce840965b5622e8a0e9a54421a1e1f3')
+
+build() {
+  cd "$srcdir/QtTube"
+  sed -i '/Exec=/ s/$/.py/' data/$pkgname.desktop
+  ln -sf ../setup.py .
+  python setup.py build || return 1
+}
+
+package() {
+  cd "$srcdir/QtTube"
+  python setup.py install --prefix=/usr --root="$pkgdir"
+  for _res in 16x16 24x24 32x32 48x48; do
+    install -Dm644 data/$pkgname-$_res.png \
+      "$pkgdir/usr/share/icons/hicolor/$_res/apps/$pkgname.png"
+  done
+}
+
+# vim:set ts=2 sw=2 et

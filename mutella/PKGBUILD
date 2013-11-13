@@ -1,0 +1,30 @@
+# Maintainer:  TDY <tdy@archlinux.info>
+# Contributor: dorphell <dorphell@archlinux.org>
+# Contributor: Tom Newsom <Jeepster@gmx.co.uk>
+
+pkgname=mutella
+pkgver=0.4.5
+pkgrel=3
+pkgdesc="An intuitive Gnutella client with console and http interfaces"
+arch=('i686' 'x86_64')
+url="http://mutella.sourceforge.net/"
+license=('GPL')
+depends=('gcc-libs' 'readline' 'zlib')
+source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz
+        $pkgname-$pkgver.diff)
+sha256sums=('db99dd1fa52fae87290e367862cb051ee1072c88249e73fe25a933ea73030cc4'
+            '83b4d6df9c16a4a4a15c6a47fe8b0f9bf3f825c18486fb08ac1b9d8fb24e9544')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  patch -Np1 -i ../$pkgname-$pkgver.diff
+  ./configure --prefix=/usr --mandir=/usr/share/man
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir/" install
+}
+
+# vim:set ts=2 sw=2 et:

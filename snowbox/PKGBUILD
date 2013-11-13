@@ -1,0 +1,23 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=snowbox
+pkgver=1.0
+pkgrel=1
+pkgdesc="A simple, secure, and easy-to-setup POP3 server"
+arch=('i686' 'x86_64')
+url="http://kiza.kcore.de/software/snowbox/"
+license=('GPL')
+depends=('perl-digest-md5')
+backup=(etc/{config,user.auth})
+source=(http://kiza.kcore.de/media/software/$pkgname/$pkgname-$pkgver.tar.gz)
+sha256sums=('1e113fd1db261ae10839cba81c03855dc3bcf8ad141e7de95f735d30cd21f616')
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  install -Dm755 $pkgname "$pkgdir/usr/sbin/$pkgname"
+  install -Dm644 $pkgname.8 "$pkgdir/usr/share/man/man8/$pkgname.8"
+  install -Dm600 config "$pkgdir/etc/$pkgname/config"
+  install -Dm600 user.auth.example "$pkgdir/etc/$pkgname/user.auth"
+}
+
+# vim:set ts=2 sw=2 et:

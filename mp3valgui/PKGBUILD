@@ -1,0 +1,26 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=mp3valgui
+pkgver=0.1.1
+pkgrel=3
+pkgdesc="A PyGTK interface to mp3val"
+url="http://mp3val.sourceforge.net/"
+arch=('i686' 'x86_64')
+license=('GPL')
+depends=('mp3val' 'pygtk')
+source=(http://downloads.sourceforge.net/mp3val/$pkgname-$pkgver.zip
+        $pkgname-$pkgver-$pkgrel.diff)
+sha256sums=('ec91656729dc49df3d05cea1f0c704e14f9ad77c2564790b431b916bed9d20f2'
+            '052e64727459f5b0ca963cfaa521f7e236753fc6e43a14b235cbd9854c3ff46f')
+
+build() {
+  cd "$srcdir/$pkgname"
+  patch -Np1 -i ../$pkgname-$pkgver-$pkgrel.diff
+}
+
+package() {
+  cd "$srcdir/$pkgname"
+  make DESTDIR="$pkgdir" install
+}
+
+# vim:set ts=2 sw=2 et:

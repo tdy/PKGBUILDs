@@ -1,0 +1,36 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=levee
+pkgver=3.5a
+pkgrel=3
+pkgdesc="A small, modal text editor based on vi"
+arch=('i686' 'x86_64')
+url="http://www.pell.portland.or.us/~orc/Code/levee/"
+license=('MIT')
+depends=('ncurses')
+conflicts=('lv') # see the build() function
+source=(http://www.pell.portland.or.us/~orc/Code/$pkgname/$pkgname-$pkgver.tar.gz
+        $pkgname-$pkgver-$pkgrel.diff COPYING)
+sha256sums=('eff1c937b1079c68725c26375969a8b51109b170bc1aba9529b989e32f7b34c8'
+            'b4010e2507d98a833f265561b20f9c513e70b4abc40c8b0ffa435254554c804d'
+            '17735dca7a89c94074239ec22955dd59df89abc6dec501269c325fc87c1932b7')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  patch -Np1 -i ../$pkgname-$pkgver-$pkgrel.diff
+
+  # An 'lv' link is created for convenience, conflicting with the 'lv' package.
+  # Uncomment the next line to skip the symlink if you also want the 'lv' package.
+  #sed -i '/LN_S/d' Makefile.in
+
+  ./configure.sh --prefix=/usr
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make PREFIX="$pkgdir" install
+  install -Dm644 ../COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+}
+
+# vim:set ts=2 sw=2 et:

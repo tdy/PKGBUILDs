@@ -1,0 +1,20 @@
+# Maintainer:  TDY <tdy@archlinux.info>
+# Contributor: Andrea Scarpino <andrea@archlinux.org>
+
+pkgname=oboinus
+pkgver=2.3
+pkgrel=1
+pkgdesc="An X11 background previewer and setter"
+arch=('any')
+url="https://github.com/suniobo/oboinus/"
+license=('GPL')
+depends=('feh' 'pygtk>=2.6.0' 'python2-imaging')
+source=($pkgname-$pkgver.tgz::https://github.com/suniobo/$pkgname/archive/release/$pkgver.tar.gz)
+sha256sums=('1f7b1ce77049dab4507b2c44484c432ed9c868f5349522eda1ee0d065f05b434')
+
+package() {
+  cd $pkgname-release-$pkgver
+  python2 setup.py install --prefix=/usr --root="$pkgdir"
+}
+
+# vim:set ts=2 sw=2 et:

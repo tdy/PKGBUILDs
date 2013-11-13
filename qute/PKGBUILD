@@ -1,0 +1,33 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=qute
+pkgver=0.4.1
+pkgrel=1
+pkgdesc="A text editor with Markdown and TeX support"
+arch=('i686' 'x86_64')
+url="http://www.inkcode.net/qute"
+license=('GPL')
+install=qute.desktop
+source=(https://github.com/downloads/fbreuer/qute-html5/Qute-$pkgver-linux.tar.gz
+        qute.sh qute.desktop)
+sha256sums=('1b5323b4891f61d43a99a6764dc5965908f3545228029927549d8efdb1835b89'
+            '45f3893eeeef8406c6cbfe130b78a5840de5c1bb1952db9b5d1ff9a240607801'
+            '93cec9343cac83a9add21875e2f76dcd57b35459067962dc599c3f74ec78d12b')
+
+package() {
+  cd "$srcdir"
+  install -dm755 "$pkgdir/opt"
+  cp -a Qute "$pkgdir/opt/qute"
+
+  # enforce perms
+  find -type f -exec chmod 644 '{}' \;
+  find -type d -exec chmod 755 '{}' \;
+  chmod 755 $(find "$pkgdir" -exec file '{}' \;|grep ELF|cut -d: -f1)
+
+  install -Dm644 Qute/README.md "$pkgdir/usr/share/docs/qute/README.md"
+  install -Dm644 Qute/qute.png "$pkgdir/usr/share/pixmaps/qute.png"
+  install -Dm644 qute.desktop "$pkgdir/usr/share/applications/qute.desktop"
+  install -Dm755 qute.sh "$pkgdir/usr/bin/qute"
+}
+
+# vim:set ts=2 sw=2 et:

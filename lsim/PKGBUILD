@@ -1,0 +1,29 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=lsim
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="A tool to superpose macromolecular electron densities and compute a structural similarity score"
+arch=('i686' 'x86_64')
+url="http://www.molspaces.com/lsim/"
+license=('custom')
+depends=('glibc')
+[[ $CARCH == x86_64 ]] && depends=('lib32-glibc')
+install=lsim.install
+source=(http://www.molspaces.com/dl/progs/lsim-linux.tar.gz
+        lsim.sh)
+sha256sums=('71f35d67c5fff4688623089e5a0526ec69a4973bd8fb4264f2519230fc7b52cc'
+            'b8a84e17b4900b10df5d149c6f2075426b49827c278055e9380f07ed13a6618f')
+
+package() {
+  cd "$srcdir/lsim.$pkgver"
+  install -Dm755 lsim "$pkgdir/usr/bin/lsim"
+  install -Dm644 lsim.par "$pkgdir/usr/share/lsim/lsim.par"
+  install -cm644 atdens.dat "$pkgdir/usr/share/lsim/atdens.dat"
+  install -Dm644 test/job.cmd "$pkgdir/usr/share/lsim/examples/job.cmd"
+  install -cm644 test/*.pdb "$pkgdir/usr/share/lsim/examples/"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/lsim/LICENSE"
+  install -Dm755 ../lsim.sh "$pkgdir/etc/profile.d/lsim.sh"
+}
+
+# vim:set ts=2 sw=2 et:

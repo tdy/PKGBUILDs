@@ -1,0 +1,26 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=perl-text-autoformat
+pkgver=1.669003
+pkgrel=1
+pkgdesc="A Perl module for automatic text wrapping and reformatting"
+arch=('any')
+url="http://search.cpan.org/dist/Text-Autoformat/"
+license=('GPL' 'PerlArtistic')
+depends=('perl-text-reform')
+options=('!emptydirs')
+source=(http://search.cpan.org/CPAN/authors/id/D/DC/DCONWAY/Text-Autoformat-$pkgver.tar.gz)
+sha256sums=('2b085ac359cee208f9c4bcd814365d6907a19850a273d415e5357f5fd4d88115')
+
+build() {
+  cd "$srcdir/Text-Autoformat-$pkgver"
+  PERL_MM_USE_DEFAULT=1 perl Makefile.PL INSTALLDIRS=vendor
+  make
+}
+
+package() {
+  cd "$srcdir/Text-Autoformat-$pkgver"
+  make install DESTDIR="$pkgdir"
+}
+
+# vim:set ts=2 sw=2 et:

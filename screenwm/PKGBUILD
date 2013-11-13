@@ -1,0 +1,25 @@
+# Maintainer:  TDY <tdy@archlinux.info>
+# Contributor: Xilon <Xilon@gmail.com>
+
+pkgname=screenwm
+pkgver=1.0
+pkgrel=2
+pkgdesc="An extension to GNU Screen"
+arch=('i686' 'x86_64')
+url="http://www.nas.nasa.gov/~kolano/projects/screenwm.html"
+license=('custom')
+depends=('screen')
+source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz)
+sha256sums=('10bf51c3abbb6c29fa30f8f242644fd668c292a1d0de71bc75b1314f43700caa')
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  install -Dm755 $pkgname "$pkgdir/usr/bin/$pkgname"
+  install -Dm644 screenwmrc "$pkgdir/usr/share/$pkgname/screenwmrc"
+  install -Dm644 README "$pkgdir/usr/share/doc/$pkgname/README"
+  install -Dm644 CHANGES "$pkgdir/usr/share/doc/$pkgname/CHANGES"
+  install -Dm644 INSTALL "$pkgdir/usr/share/doc/$pkgname/INSTALL"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+# vim:set ts=2 sw=2 et:

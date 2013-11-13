@@ -1,0 +1,26 @@
+# Maintainer:  TDY <tdy@archlinux.info>
+# Contributor: Nathan Owe <ndowens04 at gmail>
+
+pkgname=snowlog
+pkgver=1.1.1
+pkgrel=1
+pkgdesc="An Apache access log browser and analyzer"
+arch=('i686' 'x86_64')
+url="http://kiza.kcore.de/software/snowlog/"
+license=('GPL')
+depends=('ncurses' 'pcre')
+source=(http://kiza.kcore.de/software/$pkgname/download/$pkgname-$pkgver.tar.gz)
+sha256sums=('780587a18b34330a3483b95101a4b382d9582f3f7a4c881ac08fe0e15e5921cd')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make PREFIX=/usr || return 1
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  sed -i '46,49 s#man/man1#share/&#' Makefile
+  make PREFIX="$pkgdir/usr" install
+}
+
+# vim:set ts=2 sw=2 et:

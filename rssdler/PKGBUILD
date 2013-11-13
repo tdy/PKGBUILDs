@@ -1,0 +1,28 @@
+# Maintainer:  TDY <tdy@archlinux.info>
+# Contributor: lolilolicon <lolilolicon - gmail _ com>
+# Contributor: scj <scj - archlinux _ us>
+
+pkgname=rssdler
+pkgver=0.4.2
+pkgrel=4
+pkgdesc="Utility to automatically download RSS enclosures"
+arch=('any')
+url="http://code.google.com/p/rssdler/"
+license=('GPL2')
+depends=('python2-feedparser')
+source=(http://$pkgname.googlecode.com/files/$pkgname-$pkgver.tar.gz
+        $pkgname-$pkgver-fix.diff
+        config.txt)
+sha256sums=('96e1fefd1a6a3325aee1778fcf5ca115dcfb924047024f70e1ddd869017829ce'
+            '0a59a7c795b8d656ad763b82133c8a74785dde6a24cfe53d23b07be5c279b18a'
+            '3aa160b4146eca855a1b5c76581385bfacfff71063a05c6abb1e8d84955f8491')
+
+package() {
+  cd "$srcdir/$pkgname${pkgver//\./}"
+  patch -Np0 -i ../$pkgname-$pkgver-fix.diff
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1
+  install -Dm644 ../config.txt "$pkgdir/usr/share/$pkgname/config.txt"
+  install -Dm644 userFunctions.py "$pkgdir/usr/share/$pkgname/postDownloadFunctions.py"
+}
+
+# vim:set ts=2 sw=2 et:

@@ -1,0 +1,29 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=pyqonsole
+pkgver=0.2.0
+pkgrel=1
+pkgdesc="An X terminal emulator written in Python"
+arch=('i686' 'x86_64')
+url="http://www.logilab.org/project/pyqonsole/"
+license=('custom')
+depends=('pyqt3')
+makedepends=('python2-distribute')
+source=(http://ftp.logilab.org/pub/$pkgname/$pkgname-$pkgver.tar.gz
+        http://www.cecill.info/licences/Licence_CeCILL_V2-en.txt)
+sha256sums=('3b381d9cf3f27ae11b944d2f35e67a2a8b076333f0370299feea5bc7e41dd16c'
+            '2dcf0966f7eaae3af05f3e640215ac537c76d938d50ad02ad9d4260f1ca4bda5')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  python2 setup.py build
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1
+  install -Dm644 ../Licence_CeCILL_V2-en.txt \
+    "$pkgdir/usr/share/licenses/$pkgname/license.txt"
+}
+
+# vim:set ts=2 sw=2 et:

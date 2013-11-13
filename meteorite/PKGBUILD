@@ -1,0 +1,24 @@
+# Maintainer: TDY <tdy@archlinux.info>
+
+pkgname=meteorite
+pkgver=0.11
+pkgrel=1
+pkgdesc="A Matroska/MKV repair engine"
+arch=('i686' 'x86_64')
+url="http://meteorite.sourceforge.net/"
+license=('GPL')
+depends=('wxgtk')
+source=(http://downloads.sourceforge.net/$pkgname/Meteorite-v$pkgver-src.tar.bz2)
+sha256sums=('aa6f6476247f6bdf3185cbc8fec096b82f0373aa7c96b3b1c9ed4ba02a14659c')
+
+build() {
+  cd "$srcdir/Meteorite"
+  make
+}
+
+package() {
+  cd "$srcdir/Meteorite"
+  install -Dm755 $pkgname "$pkgdir/usr/bin/$pkgname"
+}
+
+# vim:set ts=2 sw=2 et:

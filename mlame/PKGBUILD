@@ -1,0 +1,19 @@
+# Maintainer:  TDY <tdy@archlinux.info>
+# Contributor: Andrey Semenov <russianpirate@gmail.com>
+
+pkgname=mlame
+pkgver=3.99.5
+pkgrel=1
+pkgdesc="A shell wrapper for LAME to encode multiple MP3s simultaneously"
+arch=('any')
+url="http://lame.sourceforge.net/"
+license=('LGPL')
+depends=('lame')
+source=(http://downloads.sourceforge.net/lame/lame-$pkgver.tar.gz)
+sha256sums=('24346b4158e4af3bd9f2e194bb23eb473c75fb7377011523353196b19b9a23ff')
+
+package() {
+  install -Dm755 "$srcdir/lame-$pkgver/misc/$pkgname" "$pkgdir/usr/bin/$pkgname"
+}
+
+# vim:set ts=2 sw=2 et:
